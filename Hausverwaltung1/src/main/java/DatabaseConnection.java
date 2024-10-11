@@ -1,7 +1,7 @@
 public interface DatabaseConnection {
-    public DatabaseConnection(Properties properties);
+    public void IDatabaseConnection(Properties properties);
 
-    void    createrAllTables();
+    void createrAllTables();
 
      void truncateAllTables();
 
