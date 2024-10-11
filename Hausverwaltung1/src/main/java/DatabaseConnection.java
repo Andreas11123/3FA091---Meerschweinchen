@@ -1,17 +1,11 @@
 public interface DatabaseConnection {
-    public DatabaseConnection(Properties properties){
+    public DatabaseConnection(Properties properties);
 
-    }
-    void    createrAllTables(){
+    void    createrAllTables();
 
-    }
-     void truncateAllTables(){
+     void truncateAllTables();
 
-    }
-      void removeAllTables(){
+      void removeAllTables();
 
-      }
-      void closeConnection(){
-
-      }
+      void closeConnection();
 }
