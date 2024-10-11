@@ -1,6 +1,6 @@
-public interface DatabaseConnection {
+public interface IDatabaseConnection {
 
-    public void IDatabaseConnection(Properties properties);
+    public  IDatabaseConnection openConnection(Properties properties);
 
     void createrAllTables();
 
