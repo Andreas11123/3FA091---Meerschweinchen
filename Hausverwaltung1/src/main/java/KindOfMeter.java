@@ -3,5 +3,4 @@ public enum KindOfMeter {
     STROM,
     WASSER,
     UNBEKANNT
-
 }
