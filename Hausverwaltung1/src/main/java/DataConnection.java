@@ -24,6 +24,7 @@ public class DataConnection {
 
         } catch (final SQLException | ClassNotFoundException e) {
             System.out.format("Fehler: " + e.getMessage());
+
         }
     }
 }
