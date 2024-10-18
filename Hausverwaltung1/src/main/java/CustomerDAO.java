@@ -11,12 +11,6 @@ public class CustomerDAO {
 
     Connection connection;
 
-    private LocalDate birthDate;
-    private String firstName;
-    private String lastName;
-    private ICustomer.Gender gender;
-    private UUID uuid;
-
     public CustomerDAO(Connection connection) { this.connection = connection; }
 
 
