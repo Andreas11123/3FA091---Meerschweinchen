@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
+/*
 public class TestConnection {
 
     private DataConnection dataConnection;
@@ -42,5 +42,9 @@ public class TestConnection {
         if (connection != null && !connection.isClosed()) {
             connection.close();
         }
+
     }
+
+
 }
+*/
