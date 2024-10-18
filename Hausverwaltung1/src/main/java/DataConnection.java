@@ -4,7 +4,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DataConnection {
-
     public void getConnection() {
         try {
             final Connection con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/hausverwaltung?allowMultiQueries=true",

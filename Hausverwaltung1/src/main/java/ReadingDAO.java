@@ -3,6 +3,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 public class ReadingDAO {
+    /*
     private final Connection connection;
 
     public ReadingDAO(Connection connection) {
@@ -82,4 +83,5 @@ public class ReadingDAO {
             stmt.executeUpdate();
         }
     }
+     */
 }
