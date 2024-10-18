@@ -4,7 +4,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DataConnection {
-    public void getConnection() {
+    public Connection getConnection() {
         try {
             final Connection con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/hausverwaltung?allowMultiQueries=true",
                     "root", "Meerschweinchen20+");
@@ -25,6 +25,7 @@ public class DataConnection {
             System.out.format("Fehler: " + e.getMessage());
 
         }
+        return null;
     }
 }
 
