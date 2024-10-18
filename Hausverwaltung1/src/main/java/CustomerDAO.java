@@ -17,14 +17,8 @@ public class CustomerDAO {
     private Gender gender;
     private UUID uuid;
 
-    // Konstruktor mit Parametern
-    public CustomerDAO(LocalDate birthDate, String firstName, String lastName, Gender gender, UUID uuid) {
-        this.birthDate = birthDate;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.gender = gender;
-        this.uuid = uuid.randomUUID();
-    }
+    public CustomerDAO(Connection connection) { this.connection = connection; }
+
 
     // CREATE
     public void addCustomer(ICustomer customer) throws SQLException {
