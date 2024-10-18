@@ -14,7 +14,7 @@ public class CustomerDAO {
     private LocalDate birthDate;
     private String firstName;
     private String lastName;
-    private Gender gender;
+    private ICustomer.Gender gender;
     private UUID uuid;
 
     public CustomerDAO(Connection connection) { this.connection = connection; }
