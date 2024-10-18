@@ -8,4 +8,5 @@ CREATE TABLE Customer (
     phone VARCHAR(15),
     address VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
 );
