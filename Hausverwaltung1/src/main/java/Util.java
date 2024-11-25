@@ -1,7 +1,11 @@
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Properties;
-/*
+
 public class Util {
     //singleton
     private static Connection con = null;
@@ -11,11 +15,12 @@ public class Util {
 
         if (con == null) {
             try {
+                String fullPath = System.getProperty("user.home") + File.separator + db + ".properties";
                 final Properties prop = new Properties();
-                prop.load(new FileReader(db + ".properties"));
-                final String dburl = prop.getProperty("DBURL");
-                final String dbuser = prop.getProperty("DBUSER");
-                final String dbpw = prop.getProperty("DBPW");
+                prop.load(new FileReader(fullPath));
+                final String dburl = prop.getProperty("Schueler.db.url");
+                final String dbuser = prop.getProperty("Schueler.db.user");
+                final String dbpw = prop.getProperty("Schueler.db.pw");
 
                 con = DriverManager.getConnection(dburl, dbuser, dbpw);
 
@@ -25,13 +30,14 @@ public class Util {
         }
         return con;
     }
-        // close
+
+    // close
     public static void close(final AutoCloseable obj) {
-        if (obj!= null) {
+        if (obj != null) {
             try {
-                    obj.close();
+                obj.close();
             } catch (final Exception e) {
-                    // ignore
+                // ignore
             }
         }
     }
@@ -41,4 +47,3 @@ public class Util {
     }
 
 }
-*/
