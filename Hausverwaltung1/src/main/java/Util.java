@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -16,11 +18,13 @@ public class Util {
         if (con == null) {
             try {
                 String fullPath = System.getProperty("user.home") + File.separator + db + ".properties";
+                System.out.println(fullPath);
+                //System.out.println(Files.exists(Path.of(fullPath)));
                 final Properties prop = new Properties();
                 prop.load(new FileReader(fullPath));
-                final String dburl = prop.getProperty("Schueler.db.url");
-                final String dbuser = prop.getProperty("Schueler.db.user");
-                final String dbpw = prop.getProperty("Schueler.db.pw");
+                final String dburl = prop.getProperty("ARodriguez.db.url");
+                final String dbuser = prop.getProperty("ARodriguez.db.user");
+                final String dbpw = prop.getProperty("ARodriguez.db.pw");
 
                 con = DriverManager.getConnection(dburl, dbuser, dbpw);
 
