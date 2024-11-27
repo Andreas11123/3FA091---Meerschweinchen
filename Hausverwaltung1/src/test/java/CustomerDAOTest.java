@@ -26,17 +26,6 @@ public class CustomerDAOTest {
                 "root",  // Ihr Testbenutzer
                 "Meerschweinchen20+");  // Passwort für den Testbenutzer
         customerDAO = new CustomerDAO(connection);
-
-        // Testtabelle vorbereiten (falls erforderlich)
-       /* String createTableSQL = "CREATE TABLE IF NOT EXISTS customers (id CHAR(36) PRIMARY KEY, " +
-                "first_name VARCHAR(255), " +
-                "last_name VARCHAR(255), " +
-                "gender VARCHAR(10)";
-        Statement statement = connection.createStatement();
-        statement.execute(createTableSQL);
-        statement.close();
-
-        */
     }
 
     @AfterEach
@@ -53,18 +42,15 @@ public class CustomerDAOTest {
         // Act
         customerDAO.addCustomer(customer);
 
-
         // Assert
         ICustomer retrievedCustomer = customerDAO.getCustomerById(customer.getId());
-        assertNotNull(retrievedCustomer);
-        assertEquals("John", retrievedCustomer.getFirstName());
-        assertEquals("Doe", retrievedCustomer.getLastName());
+        assertEquals(customer,retrievedCustomer);
     }
-/*
+
     @Test
     public void testUpdateCustomer() throws SQLException {
         // Arrange
-        ICustomer customer = new Customer("Jane", "Doe",LocalDate.parse("2020-1-08") ,ICustomer.Gender.W);
+        ICustomer customer = new Customer("Jane", "Doe",LocalDate.of(2020, Month.JANUARY, 8) ,ICustomer.Gender.W);
         customerDAO.addCustomer(customer);
 
         // Act - Aktualisiere den Namen
@@ -76,10 +62,11 @@ public class CustomerDAOTest {
         assertNotNull(updatedCustomer);
         assertEquals("Janet", updatedCustomer.getFirstName());
     }
+   
     @Test
     public void testDeleteCustomer() throws SQLException {
         // Arrange
-        ICustomer customer = new Customer("Mark", "Smith",LocalDate.parse("2020-1-08") ,ICustomer.Gender.M);
+        ICustomer customer = new Customer("Mark", "Smith",LocalDate.of(2020, Month.JANUARY, 8) ,ICustomer.Gender.M);
         customerDAO.addCustomer(customer);
 
         // Act
@@ -89,5 +76,15 @@ public class CustomerDAOTest {
         ICustomer deletedCustomer = customerDAO.getCustomerById(customer.getId());
         assertNull(deletedCustomer);  // Prüfen, ob der Kunde gelöscht wurde
     }
-*/
+
+@Test
+public void createCustomerTable() throws SQLException{
+ // Testtabelle vorbereiten (falls erforderlich)
+ String createTableSQL = "CREATE TABLE customer (id UUID PRIMARY KEY, firstname VARCHAR(50) NOT NULL, " +
+         "lastname VARCHAR(50) NOT NULL, birthdate DATE NOT NULL, gender VARCHAR(10) NOT NULL, email VARCHAR(100) UNIQUE,                              " +
+         "phone VARCHAR(15), address VARCHAR(255) , created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)";
+  Statement statement = connection.createStatement();
+  statement.execute(createTableSQL);
+  statement.close();
+   }
 }

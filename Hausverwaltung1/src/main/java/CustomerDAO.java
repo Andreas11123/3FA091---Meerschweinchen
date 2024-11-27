@@ -52,7 +52,13 @@ public class CustomerDAO {
         pst.setString(1, customerId.toString());
         ResultSet rs = pst.executeQuery();
         if (rs.next()) {
-            return new Customer(); // Hier müsstest du die Customer-Attribute befüllen
+            Customer customer = new Customer();
+            customer.setFirstName(rs.getString("firstname"));
+            customer.setId(UUID.fromString(rs.getString("id")));
+            customer.setLastName(rs.getString("lastname"));
+            customer.setBirthDate(LocalDate.parse(rs.getString("birthdate")));
+            customer.setGender(ICustomer.Gender.valueOf(rs.getString("gender")));
+            return  customer;
         }
         return null; // Customer nicht gefunden
     }
@@ -92,7 +98,7 @@ public class CustomerDAO {
 
     // CREATE TABLE
     public void createCustomerTable() throws SQLException {
-        String query = "CREATE TABLE IF NOT EXISTS customer (id UUID PRIMARY KEY, firstname VARCHAR(50) NOT NULL, " +
+        String query = "CREATE TABLE customer (id UUID PRIMARY KEY, firstname VARCHAR(50) NOT NULL, " +
                 "lastname VARCHAR(50) NOT NULL, birthdate DATE NOT NULL, gender VARCHAR(10) NOT NULL, email VARCHAR(100) UNIQUE, " +
                 "phone VARCHAR(15), address VARCHAR(255) , created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)";
         Statement stmt = connection.createStatement();

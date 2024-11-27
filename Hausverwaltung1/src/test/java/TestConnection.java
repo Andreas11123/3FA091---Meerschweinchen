@@ -22,13 +22,13 @@ public class TestConnection {
         // Verbindung zur Datenbank herstellen
         connection = DriverManager.getConnection(url, username, password);
     }
-/*
+
     @Test
     public void testConnection() {
         // Überprüfen, ob die Verbindung nicht null ist
         assertNotNull(connection, "Connection should not be null");
     }
-*/
+
     @AfterEach
     public void tearDown() throws SQLException {
         // Verbindung nach dem Test schließen
