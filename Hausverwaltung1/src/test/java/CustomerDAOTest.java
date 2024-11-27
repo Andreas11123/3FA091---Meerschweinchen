@@ -5,10 +5,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.UUID;
@@ -22,32 +19,47 @@ public class CustomerDAOTest {
     public void setUp() throws SQLException {
         // Verbindung zur MariaDB-Datenbank herstellen
         connection = DriverManager.getConnection(
-                "jdbc:mariadb://localhost:3306/Hausverwaltung", // Ihre Testdatenbank
-                "root",  // Ihr Testbenutzer
-                "Meerschweinchen20+");  // Passwort für den Testbenutzer
+                "jdbc:mariadb://localhost:3306/Hausverwaltung",
+                "root",
+                "Meerschweinchen20+");
+
         customerDAO = new CustomerDAO(connection);
-        customerDAO.createCustomerTable();
+
+        // Check if the table exists
+        String tableName = "customer";
+        String checkTableQuery = "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = '" + tableName + "'";
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(checkTableQuery)) {
+
+            boolean tableExists = rs.next() && rs.getInt(1) > 0;
+
+            if (!tableExists) {
+                customerDAO.createCustomerTable();
+            }
+        }
     }
 
     @Test
     public void testAddCustomer() throws SQLException {
         // Arrange
         ICustomer customer = new Customer("John", "Doe", LocalDate.of(2020, Month.JANUARY, 8), ICustomer.Gender.M);
+
         // Act
         customerDAO.addCustomer(customer);
 
         // Assert
         ICustomer retrievedCustomer = customerDAO.getCustomerById(customer.getId());
-        assertEquals(customer,retrievedCustomer);
+        assertEquals(customer, retrievedCustomer);
     }
 
     @Test
     public void testUpdateCustomer() throws SQLException {
         // Arrange
-        ICustomer customer = new Customer("Jane", "Doe",LocalDate.of(2020, Month.JANUARY, 8) ,ICustomer.Gender.W);
-        customerDAO.addCustomer(customer);
+        ICustomer customer = new Customer("Jane", "Doe", LocalDate.of(2020, Month.JANUARY, 8), ICustomer.Gender.W);
 
-        // Act - Aktualisiere den Namen
+        // Act - Add customer first
+        customerDAO.addCustomer(customer);
         customer.setFirstName("Janet");
         customerDAO.updateCustomer(customer);
 
@@ -60,10 +72,10 @@ public class CustomerDAOTest {
     @Test
     public void testDeleteCustomer() throws SQLException {
         // Arrange
-        ICustomer customer = new Customer("Mark", "Smith",LocalDate.of(2020, Month.JANUARY, 8) ,ICustomer.Gender.M);
-        customerDAO.addCustomer(customer);
+        ICustomer customer = new Customer("Mark", "Smith", LocalDate.of(2020, Month.JANUARY, 8), ICustomer.Gender.M);
 
-        // Act
+        // Act - Add customer first
+        customerDAO.addCustomer(customer);
         customerDAO.deleteCustomer(customer.getId());
 
         // Assert
@@ -73,8 +85,13 @@ public class CustomerDAOTest {
 
     @AfterEach
     public void tearDown() throws SQLException {
-        // Testdaten löschen, damit die Tests isoliert bleiben
-        connection.createStatement().execute("DELETE FROM customer");
-        connection.close();
+        // Drop the table
+        String tableName = "customer";
+        String dropTableQuery = "DROP TABLE IF EXISTS " + tableName;
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(dropTableQuery);
+        }
     }
+
 }
