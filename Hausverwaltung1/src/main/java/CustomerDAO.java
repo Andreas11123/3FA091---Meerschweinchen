@@ -6,27 +6,6 @@ import java.util.UUID;
 
 public class CustomerDAO {
 
-    /*public static void main(String[] args) {
-        try (Connection connection = DriverManager.getConnection("jdbc:your_database_url", "username", "password")) {
-            CustomerDAO customerDAO = new CustomerDAO(connection);
-
-            // Tabelle erstellen
-            customerDAO.createCustomerTable();
-
-            // Beispiel-Customer hinzufügen
-            ICustomer customer = new Customer(UUID.randomUUID(), "John", "Doe", LocalDate.of(1990, 1, 1), Gender.MALE);
-            customerDAO.addCustomer(customer);
-
-            // Alle Customers ausgeben
-            List<ICustomer> customers = customerDAO.getAllCustomers();
-            for (ICustomer c : customers) {
-                System.out.println(c);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }*/
-
     Connection connection;
 
     public CustomerDAO(Connection connection) {

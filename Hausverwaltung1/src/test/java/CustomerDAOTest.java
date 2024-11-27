@@ -26,13 +26,7 @@ public class CustomerDAOTest {
                 "root",  // Ihr Testbenutzer
                 "Meerschweinchen20+");  // Passwort für den Testbenutzer
         customerDAO = new CustomerDAO(connection);
-    }
-
-    @AfterEach
-    public void tearDown() throws SQLException {
-        // Testdaten löschen, damit die Tests isoliert bleiben
-        connection.createStatement().execute("DELETE FROM customer");
-        connection.close();
+        customerDAO.createCustomerTable();
     }
 
     @Test
@@ -62,7 +56,7 @@ public class CustomerDAOTest {
         assertNotNull(updatedCustomer);
         assertEquals("Janet", updatedCustomer.getFirstName());
     }
-   
+
     @Test
     public void testDeleteCustomer() throws SQLException {
         // Arrange
@@ -77,14 +71,10 @@ public class CustomerDAOTest {
         assertNull(deletedCustomer);  // Prüfen, ob der Kunde gelöscht wurde
     }
 
-@Test
-public void createCustomerTable() throws SQLException{
- // Testtabelle vorbereiten (falls erforderlich)
- String createTableSQL = "CREATE TABLE customer (id UUID PRIMARY KEY, firstname VARCHAR(50) NOT NULL, " +
-         "lastname VARCHAR(50) NOT NULL, birthdate DATE NOT NULL, gender VARCHAR(10) NOT NULL, email VARCHAR(100) UNIQUE,                              " +
-         "phone VARCHAR(15), address VARCHAR(255) , created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)";
-  Statement statement = connection.createStatement();
-  statement.execute(createTableSQL);
-  statement.close();
-   }
+    @AfterEach
+    public void tearDown() throws SQLException {
+        // Testdaten löschen, damit die Tests isoliert bleiben
+        connection.createStatement().execute("DELETE FROM customer");
+        connection.close();
+    }
 }

@@ -1,8 +1,4 @@
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -115,6 +111,17 @@ public class ReadingDAO {
             pst.setObject(1, meterId);
             pst.executeUpdate();
         }
+    }
+
+    public void createReadingTable() throws SQLException {
+        String query = "CREATE TABLE Reading(id UUID PRIMARY KEY, customer_id UUID NOT NULL, meter_value DECIMAL(10, 2) NOT NULL,\n" +
+                "    reading_date DATE NOT NULL,\n" +
+                "    reading_type VARCHAR(50),\n" +
+                "    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n" +
+                "    FOREIGN KEY (customer_id) REFERENCES Customer(id)\n" +
+                ");\n";
+        Statement stmt = connection.createStatement();
+        stmt.execute(query);
     }
 }
 
