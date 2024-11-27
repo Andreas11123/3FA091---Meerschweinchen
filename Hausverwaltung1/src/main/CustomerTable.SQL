@@ -4,9 +4,8 @@ CREATE TABLE Customer (
     lastname VARCHAR(100) NOT NULL,
     birthdate DATE NOT NULL,
     gender CHAR(1) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    phone VARCHAR(15),
-    address VARCHAR(255),
+    email VARCHAR(100) DEFAULT NULL UNIQUE,
+    phone VARCHAR(15) DEFAULT NULL,
+    address VARCHAR(255) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-
 );
