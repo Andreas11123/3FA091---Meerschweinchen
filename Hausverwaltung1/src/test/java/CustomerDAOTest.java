@@ -43,14 +43,19 @@ public class CustomerDAOTest {
     @Test
     public void testAddCustomer() throws SQLException {
         // Arrange
-        ICustomer customer = new Customer("John", "Doe", LocalDate.of(2020, Month.JANUARY, 8), ICustomer.Gender.M);
+        ICustomer customer = new Customer("John", "Doe", LocalDate.of(2020, 1, 8), ICustomer.Gender.M);
 
         // Act
         customerDAO.addCustomer(customer);
 
         // Assert
         ICustomer retrievedCustomer = customerDAO.getCustomerById(customer.getId());
-        assertEquals(customer, retrievedCustomer);
+        assertNotNull(retrievedCustomer);
+        assertEquals(customer.getFirstName(), retrievedCustomer.getFirstName());
+        assertEquals(customer.getLastName(), retrievedCustomer.getLastName());
+        assertEquals(customer.getBirthDate(), retrievedCustomer.getBirthDate());
+        assertEquals(customer.getGender(), retrievedCustomer.getGender());
+        assertEquals(customer.getId(), retrievedCustomer.getId());
     }
 
     @Test
