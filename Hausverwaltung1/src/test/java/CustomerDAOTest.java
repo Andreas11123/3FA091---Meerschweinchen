@@ -1,118 +1,92 @@
-/*
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
+import java.awt.*;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.List;
+import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.UUID;
 
 public class CustomerDAOTest {
 
-    @Mock
-    private Connection mockConnection;
-
-    @Mock
-    private PreparedStatement mockPreparedStatement;
-
-    @Mock
-    private ResultSet mockResultSet;
-
+    private Connection connection;
     private CustomerDAO customerDAO;
 
     @BeforeEach
-    public void setUp() throws Exception {
-        // Initialisiere Mocks und CustomerDAO
-        MockitoAnnotations.initMocks(this);
-        customerDAO = new CustomerDAO(mockConnection);
+    public void setUp() throws SQLException {
+        // Verbindung zur MariaDB-Datenbank herstellen
+        connection = DriverManager.getConnection(
+                "jdbc:mariadb://localhost:3306/Hausverwaltung", // Ihre Testdatenbank
+                "root",  // Ihr Testbenutzer
+                "Meerschweinchen20+");  // Passwort für den Testbenutzer
+        customerDAO = new CustomerDAO(connection);
+
+        // Testtabelle vorbereiten (falls erforderlich)
+       /* String createTableSQL = "CREATE TABLE IF NOT EXISTS customers (id CHAR(36) PRIMARY KEY, " +
+                "first_name VARCHAR(255), " +
+                "last_name VARCHAR(255), " +
+                "gender VARCHAR(10)";
+        Statement statement = connection.createStatement();
+        statement.execute(createTableSQL);
+        statement.close();
+
+        */
+    }
+
+    @AfterEach
+    public void tearDown() throws SQLException {
+        // Testdaten löschen, damit die Tests isoliert bleiben
+        connection.createStatement().execute("DELETE FROM customer");
+        connection.close();
     }
 
     @Test
     public void testAddCustomer() throws SQLException {
         // Arrange
-        ICustomer customer = mock(ICustomer.class);
-        when(customer.getId()).thenReturn(UUID.randomUUID());
-        when(customer.getFirstName()).thenReturn("John");
-        when(customer.getLastName()).thenReturn("Doe");
-        when(customer.getGender()).thenReturn(Gender.MALE);
-        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
-
+        ICustomer customer = new Customer("John", "Doe", LocalDate.of(2020, Month.JANUARY, 8), ICustomer.Gender.M);
         // Act
         customerDAO.addCustomer(customer);
 
         // Assert
-        verify(mockPreparedStatement, times(1)).executeUpdate();
+        ICustomer retrievedCustomer = customerDAO.getCustomerById(customer.getId());
+        assertNotNull(retrievedCustomer);
+        assertEquals("John", retrievedCustomer.getFirstName());
+        assertEquals("Doe", retrievedCustomer.getLastName());
     }
-
-    @Test
-    public void testGetCustomerById() throws SQLException {
-        // Arrange
-        IId customerId = mock(IId.class);
-        when(customerId.toString()).thenReturn(UUID.randomUUID().toString());
-        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
-        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
-        when(mockResultSet.next()).thenReturn(true);
-
-        // Act
-        ICustomer customer = customerDAO.getCustomerById(customerId);
-
-        // Assert
-        assertNotNull(customer);
-        verify(mockPreparedStatement, times(1)).executeQuery();
-    }
-
-    @Test
-    public void testGetAllCustomers() throws SQLException {
-        // Arrange
-        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
-        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
-        when(mockResultSet.next()).thenReturn(true, false); // Simulate one customer found
-
-        // Act
-        List<ICustomer> customers = customerDAO.getAllCustomers();
-
-        // Assert
-        assertEquals(1, customers.size());
-        
-        verify(mockPreparedStatement, times(1)).executeQuery();
-    }
-
+/*
     @Test
     public void testUpdateCustomer() throws SQLException {
         // Arrange
-        ICustomer customer = mock(ICustomer.class);
-        when(customer.getId()).thenReturn(UUID.randomUUID());
-        when(customer.getFirstName()).thenReturn("John");
-        when(customer.getLastName()).thenReturn("Doe");
-        when(customer.getGender()).thenReturn(Gender.MALE);
-        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        ICustomer customer = new Customer("Jane", "Doe",LocalDate.parse("2020-1-08") ,ICustomer.Gender.W);
+        customerDAO.addCustomer(customer);
 
-        // Act
+        // Act - Aktualisiere den Namen
+        customer.setFirstName("Janet");
         customerDAO.updateCustomer(customer);
 
         // Assert
-        verify(mockPreparedStatement, times(1)).executeUpdate();
+        ICustomer updatedCustomer = customerDAO.getCustomerById(customer.getId());
+        assertNotNull(updatedCustomer);
+        assertEquals("Janet", updatedCustomer.getFirstName());
     }
-
     @Test
     public void testDeleteCustomer() throws SQLException {
         // Arrange
-        IId customerId = mock(IId.class);
-        when(customerId.toString()).thenReturn(UUID.randomUUID().toString());
-        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        ICustomer customer = new Customer("Mark", "Smith",LocalDate.parse("2020-1-08") ,ICustomer.Gender.M);
+        customerDAO.addCustomer(customer);
 
         // Act
-        customerDAO.deleteCustomer(customerId);
+        customerDAO.deleteCustomer(customer.getId());
 
         // Assert
-        verify(mockPreparedStatement, times(1)).executeUpdate();
+        ICustomer deletedCustomer = customerDAO.getCustomerById(customer.getId());
+        assertNull(deletedCustomer);  // Prüfen, ob der Kunde gelöscht wurde
     }
-}
 */
+}

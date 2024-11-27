@@ -1,7 +1,4 @@
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,19 +13,20 @@ public class CustomerDAO {
 
     // CREATE
     public void addCustomer(ICustomer customer) throws SQLException {
-        String query = "INSERT INTO customers (id, name, gender) VALUES (?, ?, ?)";
+        String query = "INSERT INTO customer (firstname,lastname,birthdate, gender, id) VALUES (?, ?, ?, ?, ?)";
         //try (Connection con = DataConnection.getConnection();
         PreparedStatement pst = connection.prepareStatement(query);
-        pst.setString(1, customer.getId().toString());
-        pst.setString(2, customer.getFirstName());
+        pst.setDate(3, Date.valueOf(customer.getBirthDate()));
+        pst.setString(1, customer.getFirstName());
         pst.setString(2, customer.getLastName());
-        pst.setString(3, customer.getGender().toString());
+        pst.setString(4, customer.getGender().toString());
+        pst.setString(5, customer.getId().toString());
         pst.executeUpdate();
     }
 
     // READ (get customer by ID)
-    public ICustomer getCustomerById(IId customerId) throws SQLException {
-        String query = "SELECT * FROM customers WHERE id = ?";
+    public ICustomer getCustomerById(UUID customerId) throws SQLException {
+        String query = "SELECT * FROM customer WHERE id = ?";
         //try (Connection con = DataConnection.getConnection();
         PreparedStatement pst = connection.prepareStatement(query);
         pst.setString(1, customerId.toString());
@@ -42,7 +40,7 @@ public class CustomerDAO {
 
     // READ (get all customers)
     public List<ICustomer> getAllCustomers() throws SQLException {
-        String query = "SELECT * FROM customers";
+        String query = "SELECT * FROM customer";
         List<ICustomer> customers = new ArrayList<>();
         //try (Connection con = DataConnection.getConnection();
         PreparedStatement pst = connection.prepareStatement(query);
@@ -57,7 +55,7 @@ public class CustomerDAO {
 
     // UPDATE
     public void updateCustomer(ICustomer customer) throws SQLException {
-        String query = "UPDATE customers SET name = ?, gender = ? WHERE id = ?";
+        String query = "UPDATE customer SET name = ?, gender = ? WHERE id = ?";
         //try (Connection con = DataConnection.getConnection();
         PreparedStatement pst = connection.prepareStatement(query);
         pst.setString(1, customer.getFirstName());
@@ -68,13 +66,15 @@ public class CustomerDAO {
     }
 
     // DELETE
-    public void deleteCustomer(IId customerId) throws SQLException {
-        String query = "DELETE FROM customers WHERE id = ?";
+    public void deleteCustomer(UUID customerId) throws SQLException {
+        String query = "DELETE FROM customer WHERE id = ?";
         //try (Connection con = DataConnection.getConnection();
         PreparedStatement pst = connection.prepareStatement(query);
         pst.setString(1, customerId.toString());
         pst.executeUpdate();
     }
+
+
 }
 
 
