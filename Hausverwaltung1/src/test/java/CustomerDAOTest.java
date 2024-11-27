@@ -53,6 +53,7 @@ public class CustomerDAOTest {
         // Act
         customerDAO.addCustomer(customer);
 
+
         // Assert
         ICustomer retrievedCustomer = customerDAO.getCustomerById(customer.getId());
         assertNotNull(retrievedCustomer);
