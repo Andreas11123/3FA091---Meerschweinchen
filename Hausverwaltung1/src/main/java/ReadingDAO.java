@@ -19,13 +19,13 @@ public class ReadingDAO {
 
     // CREATE
     public void addReading(IReading reading) throws SQLException {
-        String checkCustomerQuery = "SELECT COUNT(*) FROM Kunde WHERE id = ?";
+        String checkCustomerQuery = "SELECT COUNT(*) FROM Customer WHERE id = ?";
         try (PreparedStatement checkStmt = connection.prepareStatement(checkCustomerQuery)) {
             checkStmt.setObject(1, reading.getCustomer().getId());
             ResultSet rs = checkStmt.executeQuery();
             if (rs.next() && rs.getInt(1) == 0) {
                 // Füge den Kunden ein, falls er nicht existiert
-                String addCustomerQuery = "INSERT INTO Kunde (id, firstName, lastName, birthDate, gender) VALUES (?, 'Unbekannt', 'Unbekannt', NOW(), 'U')";
+                String addCustomerQuery = "INSERT INTO Customer (id, firstName, lastName, birthDate, gender) VALUES (?, 'Unbekannt', 'Unbekannt', NOW(), 'U')";
                 try (PreparedStatement addStmt = connection.prepareStatement(addCustomerQuery)) {
                     addStmt.setObject(1, reading.getCustomer().getId());
                     addStmt.executeUpdate();
@@ -34,7 +34,7 @@ public class ReadingDAO {
         }
 
         // Füge die Ablesung ein
-        String query = "INSERT INTO Ablesung (meterId, customerId, dateOfReading, kindOfMeter, meterCount, substitute, comment) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Reading (meterId, customerId, dateOfReading, kindOfMeter, meterCount, substitute, comment) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pst = connection.prepareStatement(query)) {
             pst.setObject(1, reading.getMeterId());
             pst.setObject(2, reading.getCustomer().getId());
@@ -49,7 +49,7 @@ public class ReadingDAO {
 
     // READ (get reading by meterId)
     public IReading getReadingById(UUID meterId) throws SQLException {
-        String query = "SELECT * FROM Ablesung WHERE meterId = ?";
+        String query = "SELECT * FROM Reading WHERE meterId = ?";
         try (PreparedStatement pst = connection.prepareStatement(query)) {
             pst.setObject(1, meterId);
             ResultSet rs = pst.executeQuery();
@@ -72,7 +72,7 @@ public class ReadingDAO {
 
     // READ (get all readings)
     public List<IReading> getAllReadings() throws SQLException {
-        String query = "SELECT * FROM Ablesung";
+        String query = "SELECT * FROM Reading";
         List<IReading> readings = new ArrayList<>();
         try (PreparedStatement pst = connection.prepareStatement(query);
              ResultSet rs = pst.executeQuery()) {
@@ -95,7 +95,7 @@ public class ReadingDAO {
 
     // UPDATE
     public void updateReading(IReading reading) throws SQLException {
-        String query = "UPDATE Ablesung SET customerId = ?, dateOfReading = ?, kindOfMeter = ?, meterCount = ?, substitute = ?, comment = ? WHERE meterId = ?";
+        String query = "UPDATE Reading SET customerId = ?, dateOfReading = ?, kindOfMeter = ?, meterCount = ?, substitute = ?, comment = ? WHERE meterId = ?";
         try (PreparedStatement pst = connection.prepareStatement(query)) {
             pst.setObject(1, reading.getCustomer().getId());
             pst.setDate(2, Date.valueOf(reading.getDateOfReading()));
@@ -110,7 +110,7 @@ public class ReadingDAO {
 
     // DELETE
     public void deleteReading(UUID meterId) throws SQLException {
-        String query = "DELETE FROM Ablesung WHERE meterId = ?";
+        String query = "DELETE FROM Reading WHERE meterId = ?";
         try (PreparedStatement pst = connection.prepareStatement(query)) {
             pst.setObject(1, meterId);
             pst.executeUpdate();
