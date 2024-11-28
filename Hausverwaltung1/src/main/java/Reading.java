@@ -22,6 +22,10 @@ public class Reading implements IReading {
         this.substitute = substitute;
     }
 
+    public Reading() {
+
+    }
+
     @Override
     public String getComment() {
         return comment;

@@ -30,13 +30,13 @@ public class ReadingDAO {
         }
 
         // Füge die Ablesung ein
-        String query = "INSERT INTO Reading (meterId, customerId, dateOfReading, kindOfMeter, meterCount, substitute, comment) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Reading (id, customer_Id, date_of_reading, meter_count, kind_of_meter, substitute, comment) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pst = connection.prepareStatement(query)) {
             pst.setObject(1, reading.getMeterId());
             pst.setObject(2, reading.getCustomer().getId());
             pst.setDate(3, Date.valueOf(reading.getDateOfReading()));
-            pst.setString(4, reading.getKindOfMeter().name());
-            pst.setDouble(5, reading.getMeterCount());
+            pst.setDouble(4, reading.getMeterCount());
+            pst.setString(5, reading.getKindOfMeter().name());
             pst.setBoolean(6, reading.getSubstitute());
             pst.setString(7, reading.getComment());
             pst.executeUpdate();
@@ -45,21 +45,20 @@ public class ReadingDAO {
 
     // READ (get reading by meterId)
     public IReading getReadingById(UUID meterId) throws SQLException {
-        String query = "SELECT * FROM Reading WHERE meterId = ?";
+        String query = "SELECT * FROM Reading WHERE id = ?";
         try (PreparedStatement pst = connection.prepareStatement(query)) {
             pst.setObject(1, meterId);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
-                IReading reading = new Reading(
-                        (UUID) rs.getObject("meterId"),
-                        rs.getString("comment"),
-                        null, // Den Kunden später laden, falls nötig
-                        rs.getDate("dateOfReading").toLocalDate(),
-                        IReading.KindOfMeter.valueOf(rs.getString("kindOfMeter")),
-                        rs.getDouble("meterCount"),
-                        rs.getString("meterId"),
-                        rs.getBoolean("substitute")
-                );
+                Reading reading = new Reading();
+                        reading.setId(UUID.fromString(rs.getString("id")));
+                        reading.setComment(rs.getString("comment"));
+                        reading.setDateOfReading(rs.getDate("date_of_reading").toLocalDate());
+                        IReading.KindOfMeter.valueOf(rs.getString("kind_of_meter"));
+                        reading.setMeterCount(rs.getDouble("meter_count"));
+                        reading.setMeterId(rs.getString("meter_id"));
+                        reading.setSubstitute(rs.getBoolean("substitute"));
+
                 return reading;
             }
         }
@@ -91,7 +90,7 @@ public class ReadingDAO {
 
     // UPDATE
     public void updateReading(IReading reading) throws SQLException {
-        String query = "UPDATE Reading SET customerId = ?, dateOfReading = ?, kindOfMeter = ?, meterCount = ?, substitute = ?, comment = ? WHERE meterId = ?";
+        String query = "UPDATE Reading SET  customer_id = ?, date_of_reading = ?, kind_of_meter = ?, meter_count = ?, substitute = ?, comment = ? WHERE meter_id = ?";
         try (PreparedStatement pst = connection.prepareStatement(query)) {
             pst.setObject(1, reading.getCustomer().getId());
             pst.setDate(2, Date.valueOf(reading.getDateOfReading()));
@@ -106,7 +105,7 @@ public class ReadingDAO {
 
     // DELETE
     public void deleteReading(UUID meterId) throws SQLException {
-        String query = "DELETE FROM Reading WHERE meterId = ?";
+        String query = "DELETE FROM Reading WHERE id = ?";
         try (PreparedStatement pst = connection.prepareStatement(query)) {
             pst.setObject(1, meterId);
             pst.executeUpdate();
@@ -114,12 +113,17 @@ public class ReadingDAO {
     }
 
     public void createReadingTable() throws SQLException {
-        String query = "CREATE TABLE Reading(id UUID PRIMARY KEY, customer_id UUID NOT NULL, meter_value DECIMAL(10, 2) NOT NULL,\n" +
-                "    reading_date DATE NOT NULL,\n" +
-                "    reading_type VARCHAR(50),\n" +
-                "    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n" +
+        String query = "CREATE TABLE Reading (\n" +
+                "    id UUID PRIMARY KEY,\n" +
+                "    comment VARCHAR(32),\n" +
+                "    customer_id UUID NOT NULL,\n" +
+                "    date_of_reading DATE,\n" +
+                "    kind_of_meter VARCHAR(32),\n" +
+                "    meter_count DOUBLE PRECISION,\n" +
+                "    meter_id VARCHAR(32),\n" +
+                "    substitute BOOLEAN,\n" +
                 "    FOREIGN KEY (customer_id) REFERENCES Customer(id)\n" +
-                ");\n";
+                ");";
         Statement stmt = connection.createStatement();
         stmt.execute(query);
     }

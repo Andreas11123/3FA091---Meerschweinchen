@@ -1,9 +1,11 @@
 CREATE TABLE Reading (
     id UUID PRIMARY KEY,
+    comment VARCHAR(32),
     customer_id UUID NOT NULL,
-    meter_value DECIMAL(10, 2) NOT NULL,
-    reading_date DATE NOT NULL,
-    reading_type VARCHAR(50),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    date_of_reading DATE,
+    kind_of_meter VARCHAR(32),
+    meter_count DOUBLE PRECISION,
+    meter_id VARCHAR(32),
+    substitute BOOLEAN,
     FOREIGN KEY (customer_id) REFERENCES Customer(id)
 );
