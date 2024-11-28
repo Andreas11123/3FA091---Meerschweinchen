@@ -4,11 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import java.awt.*;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.UUID;
+import java.util.List;
 
 public class CustomerDAOTest {
 
@@ -98,5 +98,31 @@ public class CustomerDAOTest {
             stmt.execute(dropTableQuery);
         }
     }
+
+    @Test
+    public void testGetAllCustomers() throws SQLException {
+        // Setup: Add some sample customers
+        UUID customerId1 = UUID.randomUUID();
+        UUID customerId2 = UUID.randomUUID();
+
+        ICustomer customer1 = new Customer("John", "Smith", LocalDate.of(1990, 1, 1), ICustomer.Gender.M);
+        ICustomer customer2 = new Customer("Jane", "Adam", LocalDate.of(1995, 6, 15), ICustomer.Gender.W);
+
+        customerDAO.addCustomer(customer1);
+        customerDAO.addCustomer(customer2);
+
+        // Test: Get all customers
+        List<ICustomer> allCustomers = customerDAO.getAllCustomers();
+
+        // Assertions
+        assertNotNull("All customers should not be null", String.valueOf(allCustomers));
+        assertEquals("Should return exactly two customers " + 2, "Should return exactly two customers " + allCustomers.size());
+
+
+        // Cleanup: Remove added customers
+        customerDAO.deleteCustomer(customer1.getId());
+        customerDAO.deleteCustomer(customer2.getId());
+    }
+
 
 }

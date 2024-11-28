@@ -73,13 +73,13 @@ public class ReadingDAO {
              ResultSet rs = pst.executeQuery()) {
             while (rs.next()) {
                 IReading reading = new Reading(
-                        (UUID) rs.getObject("meterId"),
+                        (UUID) rs.getObject("Id"),
                         rs.getString("comment"),
                         null, // Den Kunden später laden, falls nötig
-                        rs.getDate("dateOfReading").toLocalDate(),
-                        IReading.KindOfMeter.valueOf(rs.getString("kindOfMeter")),
-                        rs.getDouble("meterCount"),
-                        rs.getString("meterId"),
+                        rs.getDate("date_of_reading").toLocalDate(),
+                        IReading.KindOfMeter.valueOf(rs.getString("kind_of_meter")),
+                        rs.getDouble("meter_count"),
+                        rs.getString("meter_id"),
                         rs.getBoolean("substitute")
                 );
                 readings.add(reading);

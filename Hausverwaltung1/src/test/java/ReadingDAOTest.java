@@ -2,6 +2,7 @@ import org.junit.jupiter.api.*;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -155,5 +156,51 @@ public class ReadingDAOTest {
         // Verify Deletion
         IReading deletedReading = readingDAO.getReadingById(meterId);
         assertNull(deletedReading);
+    }
+
+    @Test
+    public void testGetAllReadings() throws SQLException {
+        // Setup: Add some sample readings
+        UUID meterId1 = UUID.randomUUID();
+        UUID meterId2 = UUID.randomUUID();
+
+        ICustomer customer = new Customer("John", "Doe", LocalDate.of(1990, 1, 1), ICustomer.Gender.M);
+        customerDAO.addCustomer(customer);
+
+        IReading reading1 = new Reading(
+                meterId1,
+                "First reading",
+                customer,
+                LocalDate.now(),
+                IReading.KindOfMeter.STROM,
+                100.0,
+                meterId1.toString(),
+                false
+        );
+
+        IReading reading2 = new Reading(
+                meterId2,
+                "Second reading",
+                customer,
+                LocalDate.now().minusDays(7),
+                IReading.KindOfMeter.WASSER,
+                50.0,
+                meterId2.toString(),
+                true
+        );
+
+        readingDAO.addReading(reading1);
+        readingDAO.addReading(reading2);
+
+        // Test: Get all readings
+        List<IReading> allReadings = readingDAO.getAllReadings();
+
+        // Assertions
+        assertNotNull("All readings should not be null", String.valueOf(allReadings));
+        assertEquals("Should return exactly two readings" + 2, "Should return exactly two readings" + allReadings.size());
+
+        // Cleanup: Remove added readings
+        readingDAO.deleteReading(reading1.getId());
+        readingDAO.deleteReading(reading2.getId());
     }
 }
