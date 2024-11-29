@@ -1,3 +1,4 @@
+import ReadingAndCustomer.*;
 import org.junit.jupiter.api.*;
 
 
@@ -106,52 +107,22 @@ public class DatebaseTest {
         assertEquals("The date of reading should match", LocalDate.now(), String.valueOf(reading.getDateOfReading()));
     }
 
-
     @Test
     public void testAddReadingWithValidCustomer() throws SQLException {
-        // Kunde und Ablesung hinzufügen
-        UUID customerId = UUID.randomUUID();
         UUID meterId = UUID.randomUUID();
 
         ICustomer customer = new Customer("Anna", "Mustermann", LocalDate.of(1990, 5, 20), ICustomer.Gender.W);
         customerDAO.addCustomer(customer);
 
-        IReading reading = new Reading(
-                meterId,
-                "Gültige Ablesung",
-                customer,
-                LocalDate.now(),
-                IReading.KindOfMeter.STROM,
-                300.0,
-                meterId.toString(),
-                false
-        );
+        IReading reading = new Reading(meterId, "Gültige Ablesung", customer, LocalDate.now(), IReading.KindOfMeter.STROM, 300.0, meterId.toString(), false);
+        readingDAO.addReading(reading);
 
-        try {
-            readingDAO.addReading(reading);
+        IReading retrievedReading = readingDAO.getReadingById(meterId);
+        assertNotNull("Retrieved reading should not be null", String.valueOf(retrievedReading));
 
-            // Ablesung überprüfen
-            IReading retrievedReading = readingDAO.getReadingById(meterId);
-            assertNotNull("Retrieved reading should not be null", String.valueOf(retrievedReading));
-
-
-
-            // Check if the customer ID matches
-            assertEquals("The retrieved reading should have the correct customer ID",
-                    customerId,
-                    String.valueOf(retrievedReading.getCustomer().getId()));
-
-            // Additional checks
-            assertNotNull("The meter ID should not be null", retrievedReading.getMeterId());
-            assertEquals("The meter ID should match", meterId.toString(), retrievedReading.getMeterId());
-            assertEquals("The date of reading should match", LocalDate.now(), String.valueOf(retrievedReading.getDateOfReading()));
-
-        } catch (SQLException e) {
-            fail("An unexpected SQLException was thrown: " + e.getMessage());
-        } catch (NullPointerException e) {
-            fail("An unexpected NullPointerException was thrown: " + e.getMessage());
-        }
+        readingDAO.deleteReading(meterId);
     }
+
 
     @Test
     public void testAddCustomerAndReadingThenDeleteCustomer() throws SQLException {

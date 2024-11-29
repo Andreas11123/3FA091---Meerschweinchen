@@ -1,3 +1,5 @@
+package DataConnection;
+
 import java.util.Properties;
 
 public interface IDatabaseConnection {

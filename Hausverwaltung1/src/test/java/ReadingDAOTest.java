@@ -1,9 +1,11 @@
+import ReadingAndCustomer.*;
 import org.junit.jupiter.api.*;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ReadingDAOTest {
@@ -46,15 +48,6 @@ public class ReadingDAOTest {
     @Test
     void testAddAndReadReading() throws SQLException {
         UUID meterId = UUID.randomUUID();
-        UUID customerId = UUID.randomUUID();
-
-        // Customer hinzufügen
-        /*
-        connection.createStatement().execute(
-                "INSERT INTO Customer (id, firstName, lastName, birthDate, gender) VALUES (" +
-                        "'" + customerId + "', 'Jane', 'Doe', '1990-01-01', " + ICustomer.Gender.W);
-
-         */
 
         // Reading erstellen
         IReading reading = new Reading(

@@ -1,3 +1,5 @@
+package ReadingAndCustomer;
+
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -7,11 +9,11 @@ public class Customer implements ICustomer {
     private String firstName;
     private String lastName;
     private LocalDate birthDate;
-    private Gender gender;
+    private ICustomer.Gender gender;
     private UUID id;
 
     // Constructor
-    public Customer(String firstName, String lastName, LocalDate birthDate, Gender gender) {
+    public Customer(String firstName, String lastName, LocalDate birthDate, Customer.Gender gender) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthDate = birthDate;
@@ -36,7 +38,7 @@ public class Customer implements ICustomer {
     }
 
     @Override
-    public Gender getGender() {
+    public ICustomer.Gender getGender() {
         return this.gender;
     }
 
@@ -62,7 +64,7 @@ public class Customer implements ICustomer {
     }
 
     @Override
-    public void setGender(Gender gender) {
+    public void setGender(ICustomer.Gender gender) {
         this.gender = gender;
     }
 

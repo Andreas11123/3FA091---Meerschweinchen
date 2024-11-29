@@ -1,16 +1,16 @@
-import static org.junit.jupiter.api.Assertions.*;
-
 import ReadingAndCustomer.*;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.UUID;
 import java.util.List;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CustomerDAOTest {
 
@@ -85,7 +85,6 @@ public class CustomerDAOTest {
         assertEquals("Janet", updatedCustomer.getFirstName());
     }
 
-
     @Test
     public void testDeleteCustomer() throws SQLException {
         // Arrange - Kunde erstellen und hinzufügen
@@ -109,7 +108,6 @@ public class CustomerDAOTest {
         // Act - Kunde löschen
         customerDAO.deleteCustomer(customer.getId());
 
-        // Assert
         // Prüfen, ob der Kunde wirklich gelöscht wurde
         ICustomer deletedCustomer = customerDAO.getCustomerById(customer.getId());
         assertNull(deletedCustomer);  // Prüfen, ob der Kunde gelöscht wurde

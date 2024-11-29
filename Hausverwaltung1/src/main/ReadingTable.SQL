@@ -7,6 +7,5 @@ CREATE TABLE Reading (
     meter_count DOUBLE PRECISION,
     meter_id VARCHAR(32),
     substitute BOOLEAN,
-
     FOREIGN KEY (customer_id) REFERENCES Customer(id) ON DELETE SET NULL
 );

@@ -1,5 +1,6 @@
+package ReadingAndCustomer;
+
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -51,13 +52,13 @@ public class ReadingDAO {
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
                 Reading reading = new Reading();
-                        reading.setId(UUID.fromString(rs.getString("id")));
-                        reading.setComment(rs.getString("comment"));
-                        reading.setDateOfReading(rs.getDate("date_of_reading").toLocalDate());
-                        IReading.KindOfMeter.valueOf(rs.getString("kind_of_meter"));
-                        reading.setMeterCount(rs.getDouble("meter_count"));
-                        reading.setMeterId(rs.getString("meter_id"));
-                        reading.setSubstitute(rs.getBoolean("substitute"));
+                reading.setId(UUID.fromString(rs.getString("id")));
+                reading.setComment(rs.getString("comment"));
+                reading.setDateOfReading(rs.getDate("date_of_reading").toLocalDate());
+                IReading.KindOfMeter.valueOf(rs.getString("kind_of_meter"));
+                reading.setMeterCount(rs.getDouble("meter_count"));
+                reading.setMeterId(rs.getString("meter_id"));
+                reading.setSubstitute(rs.getBoolean("substitute"));
 
                 return reading;
             }
@@ -116,14 +117,13 @@ public class ReadingDAO {
         String query = "CREATE TABLE Reading (\n" +
                 "    id UUID PRIMARY KEY,\n" +
                 "    comment VARCHAR(32),\n" +
-                "    customer_id UUID,\n" +          // NOT NULL Constraint entfernt
+                "    customer_id UUID,\n" +
                 "    date_of_reading DATE,\n" +
                 "    kind_of_meter VARCHAR(32),\n" +
                 "    meter_count DOUBLE PRECISION,\n" +
                 "    meter_id VARCHAR(32),\n" +
                 "    substitute BOOLEAN,\n" +
-                "    FOREIGN KEY (customer_id) REFERENCES Customer(id) ON DELETE SET NULL\n" + // ON DELETE SET NULL hinzugefügt
-                ");";
+                "    FOREIGN KEY (customer_id) REFERENCES Customer(id) ON DELETE SET NULL)";
         Statement stmt = connection.createStatement();
         stmt.execute(query);
     }
