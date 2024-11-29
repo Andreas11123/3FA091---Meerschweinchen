@@ -69,6 +69,7 @@ public class CustomerDAOTest {
         assertNull(retrievedReading.getCustomer(), "Die Kundenreferenz sollte null sein");
     }
 
+
     @AfterEach
     public void cleanupDatabase() throws SQLException {
         // Testdaten nach jedem Test löschen

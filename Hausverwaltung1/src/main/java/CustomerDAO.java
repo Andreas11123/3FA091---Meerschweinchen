@@ -56,6 +56,8 @@ public class CustomerDAO {
         return customers;
     }
 
+
+
     // UPDATE
     public void updateCustomer(ICustomer customer) throws SQLException {
         String query = "UPDATE customer SET firstname = ?, lastname = ?, gender = ? WHERE id = ?";
