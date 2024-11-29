@@ -73,24 +73,24 @@ public class CustomerDAO {
     public void deleteCustomer(UUID customerId) throws SQLException {
         connection.setAutoCommit(false);
         try {
-            // Zuerst: Update der Kundenreferenz in den Ablesungen auf null
+            // Zuerst die Kundenreferenzen auf null setzen
             String updateReadingsQuery = "UPDATE Reading SET customer_id = NULL WHERE customer_id = ?";
             try (PreparedStatement updateStmt = connection.prepareStatement(updateReadingsQuery)) {
-                updateStmt.setString(1, customerId.toString());
+                updateStmt.setObject(1, customerId);
                 updateStmt.executeUpdate();
             }
 
-            // Danach: Löschen des Kunden
-            String deleteCustomerQuery = "DELETE FROM customer WHERE id = ?";
+            // Dann den Kunden löschen
+            String deleteCustomerQuery = "DELETE FROM Customer WHERE id = ?";
             try (PreparedStatement deleteStmt = connection.prepareStatement(deleteCustomerQuery)) {
-                deleteStmt.setString(1, customerId.toString());
+                deleteStmt.setObject(1, customerId);
                 deleteStmt.executeUpdate();
             }
 
             connection.commit();
         } catch (SQLException e) {
             connection.rollback();
-            System.err.println("Fehler beim Löschen des Kunden: " + e.getMessage());
+            throw e;  // Fehler weiterwerfen statt nur zu loggen
         } finally {
             connection.setAutoCommit(true);
         }

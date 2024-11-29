@@ -116,13 +116,13 @@ public class ReadingDAO {
         String query = "CREATE TABLE Reading (\n" +
                 "    id UUID PRIMARY KEY,\n" +
                 "    comment VARCHAR(32),\n" +
-                "    customer_id UUID NOT NULL,\n" +
+                "    customer_id UUID,\n" +          // NOT NULL Constraint entfernt
                 "    date_of_reading DATE,\n" +
                 "    kind_of_meter VARCHAR(32),\n" +
                 "    meter_count DOUBLE PRECISION,\n" +
                 "    meter_id VARCHAR(32),\n" +
                 "    substitute BOOLEAN,\n" +
-                "    FOREIGN KEY (customer_id) REFERENCES Customer(id)\n" +
+                "    FOREIGN KEY (customer_id) REFERENCES Customer(id) ON DELETE SET NULL\n" + // ON DELETE SET NULL hinzugefügt
                 ");";
         Statement stmt = connection.createStatement();
         stmt.execute(query);
