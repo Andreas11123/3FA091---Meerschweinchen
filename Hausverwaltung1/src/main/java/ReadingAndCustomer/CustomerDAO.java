@@ -1,3 +1,5 @@
+package ReadingAndCustomer;
+
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ public class CustomerDAO {
             customer.setLastName(rs.getString("lastname"));
             customer.setBirthDate(LocalDate.parse(rs.getString("birthdate")));
             customer.setGender(ICustomer.Gender.valueOf(rs.getString("gender")));
-            return  customer;
+            return customer;
         }
         return null; // Customer nicht gefunden
     }
@@ -55,7 +57,6 @@ public class CustomerDAO {
         }
         return customers;
     }
-
 
 
     // UPDATE
@@ -79,14 +80,12 @@ public class CustomerDAO {
                 updateStmt.setObject(1, customerId);
                 updateStmt.executeUpdate();
             }
-
             // Dann den Kunden löschen
             String deleteCustomerQuery = "DELETE FROM Customer WHERE id = ?";
             try (PreparedStatement deleteStmt = connection.prepareStatement(deleteCustomerQuery)) {
                 deleteStmt.setObject(1, customerId);
                 deleteStmt.executeUpdate();
             }
-
             connection.commit();
         } catch (SQLException e) {
             connection.rollback();
