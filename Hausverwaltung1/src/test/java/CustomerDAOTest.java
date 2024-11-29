@@ -85,6 +85,7 @@ public class CustomerDAOTest {
         assertEquals("Janet", updatedCustomer.getFirstName());
     }
 
+
     @Test
     public void testDeleteCustomer() throws SQLException {
         // Arrange - Kunde erstellen und hinzufügen
@@ -129,9 +130,6 @@ public class CustomerDAOTest {
     @Test
     public void testGetAllCustomers() throws SQLException {
         // Setup: Add some sample customers
-        UUID customerId1 = UUID.randomUUID();
-        UUID customerId2 = UUID.randomUUID();
-
         ICustomer customer1 = new Customer("John", "Smith", LocalDate.of(1990, 1, 1), ICustomer.Gender.M);
         ICustomer customer2 = new Customer("Jane", "Adam", LocalDate.of(1995, 6, 15), ICustomer.Gender.W);
 

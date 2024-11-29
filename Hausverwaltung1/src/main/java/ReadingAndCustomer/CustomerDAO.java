@@ -100,6 +100,7 @@ public class CustomerDAO {
         String query = "CREATE TABLE customer (id UUID PRIMARY KEY, firstname VARCHAR(50) NOT NULL, " +
                 "lastname VARCHAR(50) NOT NULL, birthdate DATE NOT NULL, gender VARCHAR(10) NOT NULL, email VARCHAR(100) UNIQUE, " +
                 "phone VARCHAR(15), address VARCHAR(255) , created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)";
+
         Statement stmt = connection.createStatement();
         stmt.execute(query);
     }
