@@ -7,6 +7,7 @@ public class Server {
         // Implementierung hier
     }
 
+
     // Stoppt den Server
     public static void stopServer() {
         // Implementierung hier

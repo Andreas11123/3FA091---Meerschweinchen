@@ -7,5 +7,6 @@ public class Main {
         System.out.println(System.getProperty("user.name"));
         DataConnection con = new DataConnection();
         con.getConnection();
+
     }
 }
