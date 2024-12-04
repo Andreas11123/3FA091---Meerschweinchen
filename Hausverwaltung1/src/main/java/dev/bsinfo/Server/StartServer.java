@@ -1,9 +1,9 @@
+package dev.bsinfo.Server;
+
 import com.sun.net.httpserver.HttpServer;
-import jdk.internal.loader.Resource;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import java.net.Authenticator;
 import java.net.URI;
 
 public class StartServer {
