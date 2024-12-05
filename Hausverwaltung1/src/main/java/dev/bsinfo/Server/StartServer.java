@@ -1,20 +1,10 @@
 package dev.bsinfo.Server;
 
-import com.sun.net.httpserver.HttpServer;
-import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
-import org.glassfish.jersey.server.ResourceConfig;
-
-import java.net.URI;
+import DataConnection.Server;
 
 public class StartServer {
     public static void main(String[] args) {
-        final String pack = "dev.bsinfo.ressource";
-        String url = "https://localhost:8000/rest";
-        System.out.println("Start Server");
-        System.out.println(url);
-         //final ResourceConfig rc = new ResourceConfig().packages(pack).register(Authenticator.class);
-        final ResourceConfig rc = new ResourceConfig().packages(pack);
-        final HttpServer server = JdkHttpServerFactory.createHttpServer(URI.create(url),rc);
-        System.out.println("Ready for Requests....");
+        Server.startServer("https://localhost:8000/rest");
+        Server.stopServer();
     }
 }

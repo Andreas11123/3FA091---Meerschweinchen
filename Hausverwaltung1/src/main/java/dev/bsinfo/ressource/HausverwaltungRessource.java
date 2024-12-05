@@ -11,5 +11,4 @@ public class HausverwaltungRessource {
     public String getHausverwaltungData(){
         return "Data";
     }
-
 }
