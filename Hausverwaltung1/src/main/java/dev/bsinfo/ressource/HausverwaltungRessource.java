@@ -3,12 +3,12 @@ package dev.bsinfo.ressource;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 
-@Path("Hausveraltung")
+@Path("Hausverwaltung")
 public class HausverwaltungRessource {
 
-    @Path("Data")
+    @Path("Daten")
     @GET
     public String getHausverwaltungData(){
-        return "Data";
+        return "Daten";
     }
 }
