@@ -1,0 +1,59 @@
+
+import DataConnection.Server;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import javax.net.ssl.SSLContext;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class ServerTest {
+
+    private final String serverUrl = "https://localhost:8080/test";
+
+    @BeforeEach
+    public void setUp() {
+        // Vor jedem Test starten wir den Server
+        Server.startServer(serverUrl);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        // Nach jedem Test stoppen wir den Server
+        Server.stopServer();
+    }
+
+    @Test
+    public void testServerStart() {
+        // Hier kannst du testen, ob der Server erfolgreich gestartet wurde
+        // Ein einfacher Check, um sicherzustellen, dass der Server nicht null ist und gestartet wurde
+        assertNotNull(Server.getServer(), "Server sollte nicht null sein, wenn er erfolgreich gestartet wurde.");
+    }
+
+    @Test
+    public void testServerAlreadyRunning() {
+        // Testen, dass der Server nicht doppelt gestartet werden kann
+        Server.startServer(serverUrl);
+        // Server sollte bereits laufen, also sollte keine neue Instanz erstellt werden
+        assertEquals(1, Server.getServerCount(), "Es sollte nur ein Server laufen.");
+    }
+
+    @Test
+    public void testStopServer() {
+        // Server stoppen und überprüfen, ob der Server gestoppt wurde
+        Server.stopServer();
+        assertNull(Server.getServer(), "Der Server sollte null sein, wenn er gestoppt wurde.");
+    }
+
+    @Test
+    public void testInsecureSSLContext() {
+        // Testen, ob das SSLContext erstellt wird
+        try {
+            SSLContext sslContext = Server.createInsecureSSLContext();
+            assertNotNull(sslContext, "Das SSLContext sollte nicht null sein.");
+        } catch (Exception e) {
+            fail("Fehler beim Erstellen des SSLContext: " + e.getMessage());
+        }
+    }
+}

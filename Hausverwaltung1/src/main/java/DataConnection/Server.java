@@ -52,7 +52,7 @@ public class Server {
     }
 
     // Erstellt ein SSLContext
-    private static SSLContext createInsecureSSLContext() throws Exception {
+    public static SSLContext createInsecureSSLContext() throws Exception {
         SSLContext sslContext = SSLContext.getInstance("TLS");
 
         sslContext.init(
@@ -79,4 +79,12 @@ public class Server {
         );
         return sslContext;
     }
+    public static HttpServer getServer() {
+        return server;
+    }
+
+    public static int getServerCount() {
+        return (server == null) ? 0 : 1;
+    }
+
 }
