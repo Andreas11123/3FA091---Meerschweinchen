@@ -37,7 +37,7 @@
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta.ws.rs-api</artifactId>
-            <version>3.0.0</version>
+            <version>3.1.0</version>  <!-- Aktualisiert auf 3.1.0 -->
         </dependency>
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
@@ -75,6 +75,13 @@
             <version>${jersey.version}</version>
         </dependency>
 
+        <!-- Mimepull für Multipart Support -->
+        <dependency>
+            <groupId>org.jvnet.mimepull</groupId>
+            <artifactId>mimepull</artifactId>
+            <version>1.9.15</version>
+        </dependency>
+
         <!-- Jackson Dependencies -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -93,7 +100,11 @@
             <artifactId>mariadb-java-client</artifactId>
             <version>3.1.4</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>4.0.1</version>
+        </dependency>
         <!-- Testing -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>

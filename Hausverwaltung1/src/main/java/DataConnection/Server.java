@@ -4,8 +4,6 @@ import com.sun.net.httpserver.HttpServer;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
-
-import javax.net.ssl.SSLContext;
 import java.net.URI;
 
 public class Server {
@@ -25,8 +23,6 @@ public class Server {
             System.out.println("Start Server...");
             System.out.println("URL: " + url);
 
-            SSLContext sslContext = createInsecureSSLContext();
-
             // ResourceConfig mit allen benötigten Ressourcen
             final ResourceConfig rc = new ResourceConfig()
                     .packages(pack)
@@ -36,14 +32,23 @@ public class Server {
                     .register(dev.bsinfo.ressource.ReadingResource.class)
                     .register(dev.bsinfo.ressource.SetupResource.class);
 
+            // Debug-Ausgabe der registrierten Ressourcen
+            System.out.println("Registrierte Ressourcen:");
+            rc.getClasses().forEach(System.out::println);
+
             // Server erstellen und starten
             server = JdkHttpServerFactory.createHttpServer(
                     URI.create(url),
-                    rc,
-                    sslContext
+                    rc
             );
 
             System.out.println("Server bereit für Anfragen auf " + url);
+            System.out.println("Verfügbare Endpunkte:");
+            System.out.println("- GET    " + url + "/customers");
+            System.out.println("- POST   " + url + "/customers");
+            System.out.println("- GET    " + url + "/readings");
+            System.out.println("- POST   " + url + "/readings");
+            System.out.println("- DELETE " + url + "/setupDB");
 
         } catch (Exception e) {
             System.err.println("Fehler beim Starten: " + e.getMessage());
@@ -61,35 +66,6 @@ public class Server {
         server.stop(0);
         server = null;
         System.out.println("Server gestoppt");
-    }
-
-    // Erstellt ein SSLContext
-    private static SSLContext createInsecureSSLContext() throws Exception {
-        SSLContext sslContext = SSLContext.getInstance("TLS");
-
-        sslContext.init(
-                null, // Keine KeyManager
-                new javax.net.ssl.TrustManager[] {
-                        new javax.net.ssl.X509TrustManager() {
-                            @Override
-                            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                                return new java.security.cert.X509Certificate[0];
-                            }
-
-                            @Override
-                            public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
-                                // Entwicklungsumgebung - keine Client-Zertifikatsprüfung
-                            }
-
-                            @Override
-                            public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
-                                // Entwicklungsumgebung - keine Server-Zertifikatsprüfung
-                            }
-                        }
-                },
-                new java.security.SecureRandom()
-        );
-        return sslContext;
     }
 
     // Hilfsmethoden für Tests
