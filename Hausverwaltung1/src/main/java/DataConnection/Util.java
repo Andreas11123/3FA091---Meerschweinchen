@@ -14,17 +14,19 @@ public class Util {
 
     //factory methode
     public static Connection getConnection(final String db) {
-
         if (con == null) {
             try {
+                String username = System.getProperty("user.name"); // Holt den aktuellen Benutzernamen
                 String fullPath = System.getProperty("user.home") + File.separator + db + ".properties";
                 System.out.println(fullPath);
-                //System.out.println(Files.exists(Path.of(fullPath)));
+
                 final Properties prop = new Properties();
                 prop.load(new FileReader(fullPath));
-                final String dburl = prop.getProperty("ARodriguez.db.url");
-                final String dbuser = prop.getProperty("ARodriguez.db.user");
-                final String dbpw = prop.getProperty("ARodriguez.db.pw");
+
+                // Verwende den Benutzernamen als Prefix für die Properties
+                final String dburl = prop.getProperty(username + ".db.url");
+                final String dbuser = prop.getProperty(username + ".db.user");
+                final String dbpw = prop.getProperty(username + ".db.pw");
 
                 con = DriverManager.getConnection(dburl, dbuser, dbpw);
 
@@ -47,7 +49,5 @@ public class Util {
     }
 
     private Util() {
-
     }
-
 }
