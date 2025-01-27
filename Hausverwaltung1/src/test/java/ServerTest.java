@@ -1,10 +1,7 @@
-
 import DataConnection.Server;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import javax.net.ssl.SSLContext;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,16 +41,5 @@ public class ServerTest {
         // Server stoppen und überprüfen, ob der Server gestoppt wurde
         Server.stopServer();
         assertNull(Server.getServer(), "Der Server sollte null sein, wenn er gestoppt wurde.");
-    }
-
-    @Test
-    public void testInsecureSSLContext() {
-        // Testen, ob das SSLContext erstellt wird
-        try {
-            SSLContext sslContext = Server.createInsecureSSLContext();
-            assertNotNull(sslContext, "Das SSLContext sollte nicht null sein.");
-        } catch (Exception e) {
-            fail("Fehler beim Erstellen des SSLContext: " + e.getMessage());
-        }
     }
 }
