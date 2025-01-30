@@ -51,7 +51,12 @@ public class CustomerDAO {
         PreparedStatement pst = connection.prepareStatement(query);
         try (ResultSet rs = pst.executeQuery()) {
             while (rs.next()) {
-                ICustomer customer = new Customer(); // Hier müsstest du die Customer-Attribute befüllen
+                Customer customer = new Customer();
+                customer.setFirstName(rs.getString("firstname"));
+                customer.setId(UUID.fromString(rs.getString("id")));
+                customer.setLastName(rs.getString("lastname"));
+                customer.setBirthDate(LocalDate.parse(rs.getString("birthdate")));
+                customer.setGender(ICustomer.Gender.valueOf(rs.getString("gender"))); // Hier müsstest du die Customer-Attribute befüllen
                 customers.add(customer);
             }
         }
