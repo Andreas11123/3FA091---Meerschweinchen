@@ -60,21 +60,51 @@ public class ReadingResourceTest {
 
     @Test
     @Order(2)
+    void testCreateReadingBadRequest() {
+        // Test: Fehlendes "reading"-Objekt
+        Map<String, Reading> invalidRequest = new HashMap<>();
+        Response response = readingResource.createReading(invalidRequest);
+        assertEquals(400, response.getStatus());
+
+        // Test: Fehlende Pflichtfelder (z.B. kein Customer)
+        Map<String, Reading> requestWithoutCustomer = new HashMap<>();
+        Reading reading = new Reading();
+        reading.setId(UUID.randomUUID());
+        reading.setDateOfReading(LocalDate.now());
+        reading.setKindOfMeter(IReading.KindOfMeter.WASSER);
+        reading.setMeterCount(100.0);
+        requestWithoutCustomer.put("reading", reading);
+
+        Response response2 = readingResource.createReading(requestWithoutCustomer);
+        assertEquals(400, response2.getStatus());
+    }
+
+    @Test
+    @Order(3)
     void testGetAllReadings() {
         Response response = readingResource.getReadings(null, null, null, null);
         assertEquals(200, response.getStatus());
     }
 
     @Test
-    @Order(3)
+    @Order(4)
     void testGetReadingById() {
         assertNotNull(testReadingId, "testReadingId should not be null");
         Response response = readingResource.getReading(testReadingId.toString());
         assertEquals(200, response.getStatus());
     }
+    @Test
+    @Order(5)
+    void testGetReadingByIdBadRequest() {
+        Response response = readingResource.getReading("invalid-uuid");
+
+        // Akzeptiere sowohl 400 als auch 404, je nachdem, wie die API implementiert ist
+        assertTrue(response.getStatus() == 400 || response.getStatus() == 404,
+                "Expected 400 or 404, but got " + response.getStatus());
+    }
 
     @Test
-    @Order(4)
+    @Order(6)
     void testUpdateReading() {
         Map<String, Reading> request = new HashMap<>();
         Reading reading = new Reading();
@@ -93,11 +123,37 @@ public class ReadingResourceTest {
 //        System.out.println("Response Code: " + response.getStatus());
 //        System.out.println("Response Body: " + response.getEntity());
     }
+    @Test
+    @Order(7)
+    void testUpdateReadingBadRequest() {
+        // Fehlendes "reading"-Objekt
+        Map<String, Reading> invalidRequest = new HashMap<>();
+        Response response = readingResource.updateReading(invalidRequest);
+        assertEquals(400, response.getStatus());
+
+        // Fehlende ID im Request
+        Map<String, Reading> requestWithoutId = new HashMap<>();
+        Reading reading = new Reading();
+        reading.setCustomer(new Customer("Max", "Mustermann", LocalDate.of(1990, 5, 15), Customer.Gender.M));
+        reading.setDateOfReading(LocalDate.now());
+        reading.setKindOfMeter(IReading.KindOfMeter.WASSER);
+        reading.setMeterCount(200.0);
+        requestWithoutId.put("reading", reading);
+
+        Response response2 = readingResource.updateReading(requestWithoutId);
+        assertEquals(400, response2.getStatus());
+    }
 
     @Test
-    @Order(5)
+    @Order(8)
     void testDeleteReading() {
         Response response = readingResource.deleteReading(testReadingId.toString());
         assertEquals(200, response.getStatus());
+    }
+    @Test
+    @Order(9)
+    void testDeleteReadingBadRequest() {
+        Response response = readingResource.deleteReading("invalid-uuid");
+        assertEquals(400, response.getStatus());
     }
 }
