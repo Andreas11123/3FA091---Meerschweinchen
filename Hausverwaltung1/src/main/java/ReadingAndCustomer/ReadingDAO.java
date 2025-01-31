@@ -55,7 +55,7 @@ public class ReadingDAO {
                 reading.setId(UUID.fromString(rs.getString("id")));
                 reading.setComment(rs.getString("comment"));
                 reading.setDateOfReading(rs.getDate("date_of_reading").toLocalDate());
-                IReading.KindOfMeter.valueOf(rs.getString("kind_of_meter"));
+                //IReading.KindOfMeter.valueOf(rs.getString("kind_of_meter"));
                 reading.setMeterCount(rs.getDouble("meter_count"));
                 reading.setMeterId(rs.getString("meter_id"));
                 reading.setSubstitute(rs.getBoolean("substitute"));

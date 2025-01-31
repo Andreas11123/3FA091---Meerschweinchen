@@ -118,7 +118,7 @@ public class ReadingResource {
             IReading reading = readingDAO.getReadingById(UUID.fromString(uuid));
             if (reading == null) {
                 Map<String, String> error = new HashMap<>();
-                error.put("error", "Reading not found");
+                error.put("error", "reading not found");
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity(error)
                         .build();
