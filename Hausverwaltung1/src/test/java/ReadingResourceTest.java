@@ -29,14 +29,12 @@ public class ReadingResourceTest {
         Map<String, Reading> request = new HashMap<>();
         Reading reading = new Reading();
         Customer customer = new Customer("Max", "Mustermann", LocalDate.of(1990, 5, 15), Customer.Gender.M);
-        if (customer.getId() == null) {
-            customer.setId(UUID.randomUUID());
-        }
-        customer.setId(UUID.randomUUID());
+        customer.setId(Optional.ofNullable(customer.getId()).orElse(UUID.randomUUID()));
+
+
         reading.setCustomer(customer);
-        if (reading.getId() == null) {
-            reading.setId(UUID.randomUUID());
-        }
+        reading.setId(Optional.ofNullable(reading.getId()).orElse(UUID.randomUUID()));
+        System.out.println("Reading ID: " + reading.getId());
         reading.setDateOfReading(LocalDate.now());
         reading.setKindOfMeter(IReading.KindOfMeter.HEIZUNG);
         reading.setMeterCount(123.45);
@@ -44,14 +42,20 @@ public class ReadingResourceTest {
         request.put("reading", reading);
 
         Response response = readingResource.createReading(request);
-        System.out.println(response.getEntity());
-        System.out.println(response.getStatus());
         assertEquals(201, response.getStatus());
 
         Map<String, Object> responseBody = (Map<String, Object>) response.getEntity();
         assertNotNull(responseBody.get("reading"));
         testReadingId = ((Reading) responseBody.get("reading")).getId();
         testCustomerId = ((Reading) responseBody.get("reading")).getCustomer().getId();
+
+        Reading createdReading = (Reading) responseBody.get("reading");
+        assertNotNull(createdReading.getId());  // Sicherstellen, dass die ID zurückgegeben wird
+        testReadingId = createdReading.getId();
+        testCustomerId = createdReading.getCustomer().getId();
+
+        System.out.println("Created Reading ID: " + testReadingId);
+        testReadingId = reading.getId();
     }
 
     @Test
@@ -61,34 +65,35 @@ public class ReadingResourceTest {
         assertEquals(200, response.getStatus());
     }
 
-//    @Test
-//    @Order(3)
-//    void testGetReadingById() {
-//        Response response = readingResource.getReading(testReadingId.toString());
-//        assertEquals(200, response.getStatus());
-//    }
-//
-//    @Test
-//    @Order(4)
-//    void testUpdateReading() {
-//        Map<String, Reading> request = new HashMap<>();
-//        Reading reading = new Reading();
-//        reading.setId(testReadingId);
-//        reading.setCustomer(new Customer("Max", "Mustermann", LocalDate.of(1990, 5, 15), Customer.Gender.M));
-//        reading.setDateOfReading(LocalDate.now().minusDays(1));
-//        reading.setKindOfMeter(IReading.KindOfMeter.WASSER);
-//        reading.setMeterCount(200.00);
-//        request.put("reading", reading);
-//
-//        Response response = readingResource.updateReading(request);
-//        assertEquals(200, response.getStatus());
-//        assertEquals("Reading updated successfully", response.getEntity());
-//    }
-//
-//    @Test
-//    @Order(5)
-//    void testDeleteReading() {
-//        Response response = readingResource.deleteReading(testReadingId.toString());
-//        assertEquals(200, response.getStatus());
-//    }
+    @Test
+    @Order(3)
+    void testGetReadingById() {
+        assertNotNull(testReadingId, "testReadingId should not be null");
+        Response response = readingResource.getReading(testReadingId.toString());
+        assertEquals(200, response.getStatus());
+    }
+
+    @Test
+    @Order(4)
+    void testUpdateReading() {
+        Map<String, Reading> request = new HashMap<>();
+        Reading reading = new Reading();
+        reading.setId(testReadingId);
+        reading.setCustomer(new Customer("Max", "Mustermann", LocalDate.of(1990, 5, 15), Customer.Gender.M));
+        reading.setDateOfReading(LocalDate.now().minusDays(1));
+        reading.setKindOfMeter(IReading.KindOfMeter.WASSER);
+        reading.setMeterCount(200.00);
+        request.put("reading", reading);
+
+        Response response = readingResource.updateReading(request);
+        assertEquals(200, response.getStatus());
+        assertEquals("Reading updated successfully", response.getEntity());
+    }
+
+    @Test
+    @Order(5)
+    void testDeleteReading() {
+        Response response = readingResource.deleteReading(testReadingId.toString());
+        assertEquals(200, response.getStatus());
+    }
 }

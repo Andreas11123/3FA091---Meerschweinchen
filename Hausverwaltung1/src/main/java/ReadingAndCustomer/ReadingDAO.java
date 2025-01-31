@@ -33,7 +33,8 @@ public class ReadingDAO {
         // Füge die Ablesung ein
         String query = "INSERT INTO Reading (id, customer_Id, date_of_reading, meter_count, kind_of_meter, substitute, comment) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pst = connection.prepareStatement(query)) {
-            pst.setObject(1, reading.getMeterId());
+//            pst.setObject(1, reading.getMeterId());
+            pst.setObject(1, reading.getId());
             pst.setObject(2, reading.getCustomer().getId());
             pst.setDate(3, Date.valueOf(reading.getDateOfReading()));
             pst.setDouble(4, reading.getMeterCount());
