@@ -83,11 +83,15 @@ public class ReadingResourceTest {
         reading.setDateOfReading(LocalDate.now().minusDays(1));
         reading.setKindOfMeter(IReading.KindOfMeter.WASSER);
         reading.setMeterCount(200.00);
+        reading.setSubstitute(false);
         request.put("reading", reading);
 
+        assertNotNull(testReadingId, "testReadingId sollte nicht null sein!");
         Response response = readingResource.updateReading(request);
         assertEquals(200, response.getStatus());
         assertEquals("Reading updated successfully", response.getEntity());
+//        System.out.println("Response Code: " + response.getStatus());
+//        System.out.println("Response Body: " + response.getEntity());
     }
 
     @Test
