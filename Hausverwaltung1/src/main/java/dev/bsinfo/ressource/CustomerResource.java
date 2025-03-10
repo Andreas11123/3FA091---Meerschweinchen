@@ -81,27 +81,32 @@ public class CustomerResource {
     @GET
     @Path("/{uuid}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getReading(@PathParam("uuid") String uuid) {
+    public Response getCustomer(@PathParam("uuid") String uuid) {
         try {
-            IReading reading = readingDAO.getReadingById(UUID.fromString(uuid));
-            if (reading == null) {
+            ICustomer customer = customerDAO.getCustomerById(UUID.fromString(uuid));
+            if (customer == null) {
                 Map<String, String> error = new HashMap<>();
-                error.put("error", "reading not found");
+                error.put("error", "Customer not found");
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity(error)
                         .build();
             }
             Map<String, Object> response = new HashMap<>();
-            response.put("reading", reading);
+            response.put("customer", customer);
             return Response.ok(response).build();
+        } catch (IllegalArgumentException e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Invalid UUID format");
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(error)
+                    .build();
         } catch (Exception e) {
             Map<String, String> error = new HashMap<>();
-            error.put("error", "Reading not found");
+            error.put("error", "Customer not found");
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(error)
                     .build();
         }
-
     }
 
     @PUT
