@@ -24,17 +24,17 @@ public class CustomerResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createCustomer(Map<String, Customer> requestMap) {
+    public Response createCustomer(/*Map<String, Customer> requestMap*/Customer customer) {
         try {
-            if (requestMap == null || !requestMap.containsKey("customer")) {
+           /* if (requestMap == null || !requestMap.containsKey("customer")) {
                 Map<String, String> error = new HashMap<>();
                 error.put("error", "Invalid request format. Expected: {\"customer\": {...}}");
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(error)
                         .build();
-            }
+            }*/
 
-            Customer customer = requestMap.get("customer");
+            //Customer customer = requestMap.get("customer");
             if (customer == null) {
                 Map<String, String> error = new HashMap<>();
                 error.put("error", "No customer data provided");
@@ -81,46 +81,41 @@ public class CustomerResource {
     @GET
     @Path("/{uuid}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCustomer(@PathParam("uuid") String uuid) {
+    public Response getReading(@PathParam("uuid") String uuid) {
         try {
-            ICustomer customer = customerDAO.getCustomerById(UUID.fromString(uuid));
-            if (customer == null) {
+            IReading reading = readingDAO.getReadingById(UUID.fromString(uuid));
+            if (reading == null) {
                 Map<String, String> error = new HashMap<>();
-                error.put("error", "Customer not found");
+                error.put("error", "reading not found");
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity(error)
                         .build();
             }
             Map<String, Object> response = new HashMap<>();
-            response.put("customer", customer);
+            response.put("reading", reading);
             return Response.ok(response).build();
-        } catch (IllegalArgumentException e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", "Invalid UUID format");
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(error)
-                    .build();
         } catch (Exception e) {
             Map<String, String> error = new HashMap<>();
-            error.put("error", "Customer not found");
+            error.put("error", "Reading not found");
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(error)
                     .build();
         }
+
     }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response updateCustomer(Map<String, Customer> requestMap) {
+    public Response updateCustomer(/*Map<String, Customer> requestMap*/Customer customer) {
         try {
-            if (requestMap == null || !requestMap.containsKey("customer")) {
+            /*if (requestMap == null || !requestMap.containsKey("customer")) {
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity("Invalid request format. Expected: {\"customer\": {...}}")
                         .build();
-            }
+            }*/
 
-            Customer customer = requestMap.get("customer");
+            //Customer customer = requestMap.get("customer");
             if (customer == null || customer.getId() == null) {
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity("Invalid customer data")

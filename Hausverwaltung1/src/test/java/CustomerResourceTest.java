@@ -27,9 +27,9 @@ public class CustomerResourceTest {
     void testCreateCustomer() {
         Map<String, Customer> request = new HashMap<>();
         Customer customer = new Customer();
-        customer.setFirstName("Test Kunde");
-        customer.setBirthDate(LocalDate.of(1990, 5, 20));
-        customer.setLastName("Testdatensatz");
+        customer.setFirstname("Test Kunde");
+        customer.setBirthdate(LocalDate.of(1990, 5, 20));
+        customer.setLastname("Testdatensatz");
         customer.setGender(ICustomer.Gender.D);
         request.put("customer", customer);
 
@@ -66,9 +66,9 @@ public class CustomerResourceTest {
         Map<String, Customer> request = new HashMap<>();
         Customer customer = new Customer();
         customer.setId(testCustomerId);
-        customer.setFirstName("Updated Kunde");
-        customer.setBirthDate(LocalDate.of(1990, 5, 20));
-        customer.setLastName(" Update Testdatensatz");
+        customer.setFirstname("Updated Kunde");
+        customer.setBirthdate(LocalDate.of(1990, 5, 20));
+        customer.setLastname(" Update Testdatensatz");
         customer.setGender(ICustomer.Gender.D);
         request.put("customer", customer);
 

@@ -1,7 +1,10 @@
 package ReadingAndCustomer;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import java.time.LocalDate;
 
+@JsonDeserialize(as=Customer.class)
 public interface ICustomer extends IId {
 
     enum Gender {
@@ -11,20 +14,21 @@ public interface ICustomer extends IId {
         W; // weiblich
     }
 
-    LocalDate getBirthDate();
 
-    String getFirstName();
+    LocalDate getBirthdate();
+
+    String getFirstname();
 
     Gender getGender();
 
-    String getLastName();
+    String getLastname();
 
-    void setBirthDate(LocalDate birtDate);
+    void setBirthdate(LocalDate birtDate);
 
-    void setFirstName(String firstName);
+    void setFirstname(String firstname);
 
     void setGender(Gender gender);
 
-    void setLastName(String lastName);
+    void setLastname(String lastname);
 
 }

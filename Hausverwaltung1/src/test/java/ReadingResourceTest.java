@@ -28,7 +28,7 @@ public class ReadingResourceTest {
     void testCreateReading() {
         Map<String, Reading> request = new HashMap<>();
         Reading reading = new Reading();
-        Customer customer = new Customer("Max", "Mustermann", LocalDate.of(1990, 5, 15), Customer.Gender.M);
+        Customer customer = new Customer("Max", "Mustermann", LocalDate.of(1990, 5, 30), Customer.Gender.M);
         customer.setId(Optional.ofNullable(customer.getId()).orElse(UUID.randomUUID()));
 
 
@@ -103,7 +103,7 @@ public class ReadingResourceTest {
                 "Expected 400 or 404, but got " + response.getStatus());
     }
 
-    @Test
+    @test
     @Order(6)
     void testUpdateReading() {
         Map<String, Reading> request = new HashMap<>();

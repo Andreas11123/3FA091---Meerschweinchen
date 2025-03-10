@@ -27,17 +27,17 @@ public class ReadingResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createReading(Map<String, Reading> requestMap) {
+    public Response createReading(/*Map<String, Reading> requestMap*/ Reading reading) {
         try {
-            if (requestMap == null || !requestMap.containsKey("reading")) {
+            /*if (requestMap == null || !requestMap.containsKey("reading")) {
                 Map<String, String> error = new HashMap<>();
                 error.put("error", "Invalid request format. Expected: {\"reading\": {...}}");
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(error)
                         .build();
-            }
+            }*/
 
-            Reading reading = requestMap.get("reading");
+            //Reading reading = requestMap.get("reading");
             if (reading == null) {
                 Map<String, String> error = new HashMap<>();
                 error.put("error", "No reading data provided");
@@ -133,6 +133,7 @@ public class ReadingResource {
                     .entity(error)
                     .build();
         }
+
     }
 
     @GET

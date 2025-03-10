@@ -62,9 +62,9 @@ public class CustomerDAOTest {
         // Assert
         ICustomer retrievedCustomer = customerDAO.getCustomerById(customer.getId());
         assertNotNull(retrievedCustomer);
-        assertEquals(customer.getFirstName(), retrievedCustomer.getFirstName());
-        assertEquals(customer.getLastName(), retrievedCustomer.getLastName());
-        assertEquals(customer.getBirthDate(), retrievedCustomer.getBirthDate());
+        assertEquals(customer.getFirstname(), retrievedCustomer.getFirstname());
+        assertEquals(customer.getLastname(), retrievedCustomer.getLastname());
+        assertEquals(customer.getBirthdate(), retrievedCustomer.getBirthdate());
         assertEquals(customer.getGender(), retrievedCustomer.getGender());
         assertEquals(customer.getId(), retrievedCustomer.getId());
     }
@@ -76,13 +76,13 @@ public class CustomerDAOTest {
 
         // Act - Add customer first
         customerDAO.addCustomer(customer);
-        customer.setFirstName("Janet");
+        customer.setFirstname("Janet");
         customerDAO.updateCustomer(customer);
 
         // Assert
         ICustomer updatedCustomer = customerDAO.getCustomerById(customer.getId());
         assertNotNull(updatedCustomer);
-        assertEquals("Janet", updatedCustomer.getFirstName());
+        assertEquals("Janet", updatedCustomer.getFirstname());
     }
 
     @Test

@@ -18,9 +18,9 @@ public class CustomerDAO {
     public void addCustomer(ICustomer customer) throws SQLException {
         String query = "INSERT INTO customer (firstname, lastname, birthdate, gender, id) VALUES (?, ?, ?, ?, ?)";
         PreparedStatement pst = connection.prepareStatement(query);
-        pst.setDate(3, Date.valueOf(customer.getBirthDate()));
-        pst.setString(1, customer.getFirstName());
-        pst.setString(2, customer.getLastName());
+        pst.setDate(3, Date.valueOf(customer.getBirthdate()));
+        pst.setString(1, customer.getFirstname());
+        pst.setString(2, customer.getLastname());
         pst.setString(4, customer.getGender().toString());
         pst.setString(5, customer.getId().toString());
         pst.executeUpdate();
@@ -34,10 +34,10 @@ public class CustomerDAO {
         ResultSet rs = pst.executeQuery();
         if (rs.next()) {
             Customer customer = new Customer();
-            customer.setFirstName(rs.getString("firstname"));
+            customer.setFirstname(rs.getString("firstname"));
             customer.setId(UUID.fromString(rs.getString("id")));
-            customer.setLastName(rs.getString("lastname"));
-            customer.setBirthDate(LocalDate.parse(rs.getString("birthdate")));
+            customer.setLastname(rs.getString("lastname"));
+            customer.setBirthdate(LocalDate.parse(rs.getString("birthdate")));
             customer.setGender(ICustomer.Gender.valueOf(rs.getString("gender")));
             return customer;
         }
@@ -52,10 +52,10 @@ public class CustomerDAO {
         try (ResultSet rs = pst.executeQuery()) {
             while (rs.next()) {
                 Customer customer = new Customer();
-                customer.setFirstName(rs.getString("firstname"));
+                customer.setFirstname(rs.getString("firstname"));
                 customer.setId(UUID.fromString(rs.getString("id")));
-                customer.setLastName(rs.getString("lastname"));
-                customer.setBirthDate(LocalDate.parse(rs.getString("birthdate")));
+                customer.setLastname(rs.getString("lastname"));
+                customer.setBirthdate(LocalDate.parse(rs.getString("birthdate")));
                 customer.setGender(ICustomer.Gender.valueOf(rs.getString("gender"))); // Hier müsstest du die Customer-Attribute befüllen
                 customers.add(customer);
             }
@@ -68,8 +68,8 @@ public class CustomerDAO {
     public void updateCustomer(ICustomer customer) throws SQLException {
         String query = "UPDATE customer SET firstname = ?, lastname = ?, gender = ? WHERE id = ?";
         PreparedStatement pst = connection.prepareStatement(query);
-        pst.setString(1, customer.getFirstName());
-        pst.setString(2, customer.getLastName());
+        pst.setString(1, customer.getFirstname());
+        pst.setString(2, customer.getLastname());
         pst.setString(3, customer.getGender().toString());
         pst.setString(4, customer.getId().toString());
         pst.executeUpdate();

@@ -1,6 +1,7 @@
 package ReadingAndCustomer;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -55,8 +56,9 @@ public class ReadingDAO {
                 Reading reading = new Reading();
                 reading.setId(UUID.fromString(rs.getString("id")));
                 reading.setComment(rs.getString("comment"));
+                //reading.setCustomer(reading.getCustomer().getId());
                 reading.setDateOfReading(rs.getDate("date_of_reading").toLocalDate());
-                //IReading.KindOfMeter.valueOf(rs.getString("kind_of_meter"));
+                reading.setKindOfMeter(IReading.KindOfMeter.valueOf(rs.getString("kind_of_meter")));
                 reading.setMeterCount(rs.getDouble("meter_count"));
                 reading.setMeterId(rs.getString("meter_id"));
                 reading.setSubstitute(rs.getBoolean("substitute"));
@@ -74,7 +76,7 @@ public class ReadingDAO {
         try (PreparedStatement pst = connection.prepareStatement(query);
              ResultSet rs = pst.executeQuery()) {
             while (rs.next()) {
-                IReading reading = new Reading(
+               /* IReading reading = new Reading(
                         (UUID) rs.getObject("Id"),
                         rs.getString("comment"),
                         null, // Den Kunden später laden, falls nötig
@@ -84,7 +86,7 @@ public class ReadingDAO {
                         rs.getString("meter_id"),
                         rs.getBoolean("substitute")
                 );
-                readings.add(reading);
+                readings.add(reading);*/
             }
         }
         return readings;

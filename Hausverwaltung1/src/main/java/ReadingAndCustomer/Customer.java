@@ -6,19 +6,23 @@ import java.util.UUID;
 public class Customer implements ICustomer {
 
     // Attributes
-    private String firstName;
-    private String lastName;
-    private LocalDate birthDate;
+    private String firstname;
+    private String lastname;
+    private LocalDate birthdate;
     private ICustomer.Gender gender;
     private UUID id;
 
     // Constructor
-    public Customer(String firstName, String lastName, LocalDate birthDate, Customer.Gender gender) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthDate = birthDate;
+    public Customer(String firstname, String lastname, LocalDate birthdate, /*UUID id,*/ Customer.Gender gender) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.birthdate = birthdate;
         this.gender = gender;
-        this.id = UUID.randomUUID(); // Generate a random unique ID
+        //if (id == null)
+            this.id = UUID.randomUUID(); // Generate a random unique ID
+       // else {
+        //    this.id = id;
+        //}
     }
 
     // Default constructor
@@ -28,13 +32,13 @@ public class Customer implements ICustomer {
 
     // Getters
     @Override
-    public LocalDate getBirthDate() {
-        return this.birthDate;
+    public LocalDate getBirthdate() {
+        return this.birthdate;
     }
 
     @Override
-    public String getFirstName() {
-        return this.firstName;
+    public String getFirstname() {
+        return this.firstname;
     }
 
     @Override
@@ -43,8 +47,8 @@ public class Customer implements ICustomer {
     }
 
     @Override
-    public String getLastName() {
-        return this.lastName;
+    public String getLastname() {
+        return this.lastname;
     }
 
     @Override
@@ -54,13 +58,13 @@ public class Customer implements ICustomer {
 
     // Setters
     @Override
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
+    public void setBirthdate(LocalDate birthdate) {
+        this.birthdate = birthdate;
     }
 
     @Override
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
     @Override
@@ -69,8 +73,8 @@ public class Customer implements ICustomer {
     }
 
     @Override
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     @Override
@@ -81,7 +85,7 @@ public class Customer implements ICustomer {
     // toString method for better object representation
     @Override
     public String toString() {
-        return "Customer [ID=" + id + ", First Name=" + firstName + ", Last Name=" + lastName
-                + ", Birth Date=" + birthDate + ", Gender=" + gender + "]";
+        return "Customer [ID=" + id + ", First Name=" + firstname + ", Last Name=" + lastname
+                + ", Birth Date=" + birthdate + ", Gender=" + gender + "]";
     }
 }
