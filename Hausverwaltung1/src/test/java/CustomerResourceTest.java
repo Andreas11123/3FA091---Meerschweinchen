@@ -33,13 +33,13 @@ public class CustomerResourceTest {
         customer.setGender(ICustomer.Gender.D);
         request.put("customer", customer);
 
-        Response response = customerResource.createCustomer(request);
+        Response response = customerResource.createCustomer((Customer) request);
         assertEquals(201, response.getStatus());
 
         Map<String, Object> responseBody = (Map<String, Object>) response.getEntity();
         assertNotNull(responseBody.get("customer"));
         testCustomerId = ((Customer) responseBody.get("customer")).getId();
-        Response badResponse = customerResource.createCustomer(new HashMap<>());
+        Response badResponse = customerResource.createCustomer(new Customer());
 
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), badResponse.getStatus());
         Map<String, String> badResponseBody = (Map<String, String>) badResponse.getEntity();
@@ -73,12 +73,12 @@ public class CustomerResourceTest {
         request.put("customer", customer);
 
 
-        Response response = customerResource.updateCustomer(request);
+        Response response = customerResource.updateCustomer(customer);
         assertEquals(200, response.getStatus());
         assertEquals("Customer updated successfully", response.getEntity());
 
 
-        Response badResponse = customerResource.updateCustomer(new HashMap<>());
+        Response badResponse = customerResource.updateCustomer(new Customer());
 
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), badResponse.getStatus());
         assertEquals("Invalid request format. Expected: {\"customer\": {...}}", badResponse.getEntity());
@@ -87,10 +87,10 @@ public class CustomerResourceTest {
 
         // **FEHLERHAFTER REQUEST** (Kunde ohne ID)
         Customer invalidCustomer = new Customer();
-        Map<String, Customer> invalidRequestMap = new HashMap<>();
-        invalidRequestMap.put("customer", invalidCustomer);
+        Map<String, Customer> customerInvalid = new HashMap<>();
+        customerInvalid.put("customer", invalidCustomer);
 
-        Response badResponse2 = customerResource.updateCustomer(invalidRequestMap);
+        Response badResponse2 = customerResource.updateCustomer((Customer) customerInvalid);
         System.out.println(badResponse2.getStatus());
         System.out.println(badResponse2.getEntity());
         System.out.println(Response.Status.BAD_REQUEST.getStatusCode());

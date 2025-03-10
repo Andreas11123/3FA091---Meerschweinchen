@@ -42,7 +42,7 @@ public class SetupResourceTest {
         }
     }
 
-    @test
+    @Test
     @Order(1)
     void testSetupDatabase_Success() {
         // Test, ob die setupDatabase-Methode erfolgreich funktioniert und Tabellen erstellt
@@ -64,7 +64,7 @@ public class SetupResourceTest {
         }
     }
 
-    @test
+    @Test
     @Order(2)
     void testSetupDatabase_Failure() throws Exception {
         // Fehlerfall, falls eine Exception geworfen wird

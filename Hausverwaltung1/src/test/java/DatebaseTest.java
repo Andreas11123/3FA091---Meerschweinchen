@@ -43,7 +43,7 @@ public class DatebaseTest {
         connection.createStatement().execute("DELETE FROM Customer");
     }
 
-    @test
+    @Test
     public void testNoExceptionsOnInvalidData() throws SQLException {
         ICustomer invalidCustomer = new Customer(null, "", null, null);
         IReading invalidReading = new Reading(UUID.randomUUID(),
@@ -61,7 +61,7 @@ public class DatebaseTest {
     }
 
 
-    @test
+    @Test
     public void testDeleteCustomerKeepsReadings() throws SQLException {
         // Kunde und Ablesung hinzufügen
         UUID customerId = UUID.randomUUID();
@@ -82,7 +82,7 @@ public class DatebaseTest {
         assertNull(retrievedReading.getCustomer()); // Die Kundenreferenz muss NULL sein
     }
 
-    @test
+    @Test
     public void testCannotAddReadingWithoutCustomer() {
         // Versuch, eine Ablesung ohne gültigen Kunden hinzuzufügen
         UUID meterId = UUID.randomUUID();
@@ -107,7 +107,7 @@ public class DatebaseTest {
         assertEquals("The date of reading should match", LocalDate.now(), String.valueOf(reading.getDateOfReading()));
     }
 
-    @test
+    @Test
     public void testAddReadingWithValidCustomer() throws SQLException {
         UUID meterId = UUID.randomUUID();
 
@@ -124,7 +124,7 @@ public class DatebaseTest {
     }
 
 
-    @test
+    @Test
     public void testAddCustomerAndReadingThenDeleteCustomer() throws SQLException {
         // Kunde und Ablesung hinzufügen
         UUID customerId = UUID.randomUUID();

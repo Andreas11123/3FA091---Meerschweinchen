@@ -45,7 +45,7 @@ public class ReadingDAOTest {
         connection.close();
     }
 
-    @test
+    @Test
     void testAddAndReadReading() throws SQLException {
         UUID meterId = UUID.randomUUID();
 
@@ -79,7 +79,7 @@ public class ReadingDAOTest {
         connection.createStatement().execute("DELETE FROM Customer");
     }
 
-    @test
+    @Test
     void testUpdateReading() throws SQLException {
         UUID meterId = UUID.randomUUID();
         UUID customerId = UUID.randomUUID();
@@ -117,7 +117,7 @@ public class ReadingDAOTest {
         assertEquals(200.0, updatedReading.getMeterCount());
     }
 
-    @test
+    @Test
     void testDeleteReading() throws SQLException {
         UUID meterId = UUID.randomUUID();
         UUID customerId = UUID.randomUUID();
@@ -151,7 +151,7 @@ public class ReadingDAOTest {
         assertNull(deletedReading);
     }
 
-    @test
+    @Test
     public void testGetAllReadings() throws SQLException {
         // Setup: Add some sample readings
         UUID meterId1 = UUID.randomUUID();

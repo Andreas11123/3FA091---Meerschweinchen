@@ -15,11 +15,6 @@ public class ServerTest {
         Server.startServer(serverUrl);
     }
 
-    @AfterEach
-    public void tearDown() {
-        // Nach jedem Test stoppen wir den Server
-        Server.stopServer();
-    }
 
     @Test
     public void testServerStart() {
@@ -36,10 +31,11 @@ public class ServerTest {
         assertEquals(1, Server.getServerCount(), "Es sollte nur ein Server laufen.");
     }
 
-    @Test
-    public void testStopServer() {
-        // Server stoppen und überprüfen, ob der Server gestoppt wurde
+    @AfterEach
+    public void tearDown() {
+        // Nach jedem Test stoppen wir den Server
         Server.stopServer();
         assertNull(Server.getServer(), "Der Server sollte null sein, wenn er gestoppt wurde.");
     }
+
 }

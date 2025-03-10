@@ -41,7 +41,7 @@ public class ReadingResourceTest {
         reading.setSubstitute(false);
         request.put("reading", reading);
 
-        Response response = readingResource.createReading(request);
+        Response response = readingResource.createReading((Reading) request);
         assertEquals(201, response.getStatus());
 
         Map<String, Object> responseBody = (Map<String, Object>) response.getEntity();
@@ -63,7 +63,7 @@ public class ReadingResourceTest {
     void testCreateReadingBadRequest() {
         // Test: Fehlendes "reading"-Objekt
         Map<String, Reading> invalidRequest = new HashMap<>();
-        Response response = readingResource.createReading(invalidRequest);
+        Response response = readingResource.createReading((Reading) invalidRequest);
         assertEquals(400, response.getStatus());
 
         // Test: Fehlende Pflichtfelder (z.B. kein Customer)
@@ -75,7 +75,7 @@ public class ReadingResourceTest {
         reading.setMeterCount(100.0);
         requestWithoutCustomer.put("reading", reading);
 
-        Response response2 = readingResource.createReading(requestWithoutCustomer);
+        Response response2 = readingResource.createReading((Reading) requestWithoutCustomer);
         assertEquals(400, response2.getStatus());
     }
 
@@ -103,7 +103,7 @@ public class ReadingResourceTest {
                 "Expected 400 or 404, but got " + response.getStatus());
     }
 
-    @test
+    @Test
     @Order(6)
     void testUpdateReading() {
         Map<String, Reading> request = new HashMap<>();
