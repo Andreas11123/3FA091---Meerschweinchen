@@ -32,9 +32,9 @@ public class ReadingDAO {
         }
 
         // Füge die Ablesung ein
-        String query = "INSERT INTO Reading (id, customer_Id, date_of_reading, meter_count, kind_of_meter, substitute, comment) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Reading (id, customer_Id, date_of_reading, meter_count, kind_of_meter, substitute, comment, meter_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pst = connection.prepareStatement(query)) {
-//            pst.setObject(1, reading.getMeterId());
+//          pst.setObject(1, reading.getMeterId());
             pst.setObject(1, reading.getId());
             pst.setObject(2, reading.getCustomer().getId());
             pst.setDate(3, Date.valueOf(reading.getDateOfReading()));
@@ -42,6 +42,7 @@ public class ReadingDAO {
             pst.setString(5, reading.getKindOfMeter().name());
             pst.setBoolean(6, reading.getSubstitute());
             pst.setString(7, reading.getComment());
+            pst.setString(8, reading.getMeterId());
             pst.executeUpdate();
         }
     }

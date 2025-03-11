@@ -1,10 +1,12 @@
 package ReadingAndCustomer;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.time.LocalDate;
 
 @JsonDeserialize(as=Customer.class)
+@JsonSerialize(as=Customer.class)
 public interface ICustomer extends IId {
 
     enum Gender {
