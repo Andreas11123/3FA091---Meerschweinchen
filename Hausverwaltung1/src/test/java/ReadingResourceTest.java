@@ -41,7 +41,7 @@ public class ReadingResourceTest {
         reading.setSubstitute(false);
         request.put("reading", reading);
 
-        Response response = readingResource.createReading((Reading) request);
+        Response response = readingResource.createReading(reading);
         assertEquals(201, response.getStatus());
 
         Map<String, Object> responseBody = (Map<String, Object>) response.getEntity();
@@ -63,19 +63,17 @@ public class ReadingResourceTest {
     void testCreateReadingBadRequest() {
         // Test: Fehlendes "reading"-Objekt
         Map<String, Reading> invalidRequest = new HashMap<>();
-        Response response = readingResource.createReading((Reading) invalidRequest);
+        Response response = readingResource.createReading(null);
         assertEquals(400, response.getStatus());
 
-        // Test: Fehlende Pflichtfelder (z.B. kein Customer)
-        Map<String, Reading> requestWithoutCustomer = new HashMap<>();
-        Reading reading = new Reading();
-        reading.setId(UUID.randomUUID());
-        reading.setDateOfReading(LocalDate.now());
-        reading.setKindOfMeter(IReading.KindOfMeter.WASSER);
-        reading.setMeterCount(100.0);
-        requestWithoutCustomer.put("reading", reading);
+        Reading readingWithoutCustomer = new Reading();
+        readingWithoutCustomer.setId(UUID.randomUUID());
+        readingWithoutCustomer.setDateOfReading(LocalDate.now());
+        readingWithoutCustomer.setKindOfMeter(IReading.KindOfMeter.WASSER);
+        readingWithoutCustomer.setMeterCount(100.0);
 
-        Response response2 = readingResource.createReading((Reading) requestWithoutCustomer);
+// Jetzt wird ein einzelnes Reading-Objekt übergeben, nicht eine Map
+        Response response2 = readingResource.createReading(readingWithoutCustomer);
         assertEquals(400, response2.getStatus());
     }
 

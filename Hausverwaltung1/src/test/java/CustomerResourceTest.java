@@ -33,7 +33,7 @@ public class CustomerResourceTest {
         customer.setGender(ICustomer.Gender.D);
         request.put("customer", customer);
 
-        Response response = customerResource.createCustomer((Customer) request);
+        Response response = customerResource.createCustomer(null);
         assertEquals(201, response.getStatus());
 
         Map<String, Object> responseBody = (Map<String, Object>) response.getEntity();
