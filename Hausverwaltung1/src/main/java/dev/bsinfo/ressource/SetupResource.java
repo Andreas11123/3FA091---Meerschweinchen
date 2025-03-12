@@ -8,8 +8,6 @@ import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 import java.sql.Connection;
-import java.util.HashMap;
-import java.util.Map;
 
 @Path("/setupDB")
 public class SetupResource {
@@ -33,14 +31,11 @@ public class SetupResource {
             customerDAO.createCustomerTable();
             readingDAO.createReadingTable();
 
-
-            //response.put("message", "Database setup completed successfully");
-            return Response.status(Response.Status.OK).build();
+            return Response.status(Response.Status.OK).entity("Database setup completed successfully").build();
 
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-            //error.put("error", "Error setting up database: " + e.getMessage());
-
+            System.out.println("test");
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error setting up database: " + e.getMessage()).build();
         }
     }
 }
