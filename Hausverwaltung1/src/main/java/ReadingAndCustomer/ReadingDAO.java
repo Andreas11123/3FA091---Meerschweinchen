@@ -149,5 +149,60 @@ public class ReadingDAO {
         Statement stmt = connection.createStatement();
         stmt.execute(query);
     }
+
+    public List<IReading> filterReadings(UUID customerId, LocalDate startDate,
+                                         LocalDate endDate, IReading.KindOfMeter meterType) {
+        String query = "SELECT r.*, c.* FROM Reading r LEFT JOIN Customer c ON r.customer_id = c.id WHERE 1=1";
+
+        if (customerId != null) query += " AND r.customer_id = ? ";
+        if (startDate != null) query += " AND r.date_of_reading >= ? ";
+        if (endDate != null) query += " AND r.date_of_reading <= ? ";
+        if (meterType != null) query += " AND r.kind_of_meter = ? ";
+
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            int paramIndex = 1;
+            if (customerId != null) pst.setObject(paramIndex++, customerId);
+            if (startDate != null) pst.setObject(paramIndex++, startDate);
+            if (endDate != null) pst.setObject(paramIndex++, endDate);
+            if (meterType != null) pst.setString(paramIndex++, meterType.toString());
+
+            try (ResultSet rs = pst.executeQuery()) {
+                List<IReading> readings = new ArrayList<>();
+                while (rs.next()) {
+                    readings.add(mapToReading(rs));
+                }
+                return readings;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error filtering readings: " + e.getMessage(), e);
+        }
+    }
+
+    private IReading mapToReading(ResultSet rs) throws SQLException {
+        IReading reading = new Reading();
+
+        // Reading fields
+        reading.setId(UUID.fromString(rs.getString("id")));
+        reading.setComment(rs.getString("comment"));
+        reading.setDateOfReading(rs.getDate("date_of_reading").toLocalDate());
+        reading.setKindOfMeter(IReading.KindOfMeter.valueOf(rs.getString("kind_of_meter")));
+        reading.setMeterCount(rs.getDouble("meter_count"));
+        reading.setMeterId(rs.getString("meter_id"));
+        reading.setSubstitute(rs.getBoolean("substitute"));
+
+        // Customer fields (if available)
+        if (rs.getObject("c.id") != null) {
+            Customer customer = new Customer();
+            customer.setId(UUID.fromString(rs.getString("c.id")));
+            customer.setFirstname(rs.getString("c.firstname"));
+            customer.setLastname(rs.getString("c.lastname"));
+            customer.setBirthdate(LocalDate.parse(rs.getString("c.birthdate")));
+            customer.setGender(ICustomer.Gender.valueOf(rs.getString("c.gender")));
+            reading.setCustomer(customer);
+        }
+
+        return reading;
+    }
 }
+
 

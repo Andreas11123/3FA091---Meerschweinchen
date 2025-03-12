@@ -152,56 +152,45 @@ public class ReadingResource {
             final UUID custId = customerId != null ? UUID.fromString(customerId) : null;
 
             // Get base list of readings
-            List<IReading> readings = new ArrayList<>(readingDAO.getAllReadings());
+            List<IReading> readings = readingDAO.filterReadings(custId, start, end, meterType);
 
-            // Apply filters
-            if (custId != null) {
-                readings = readings.stream()
-                        .filter(r -> r.getCustomer() != null &&
-                                r.getCustomer().getId().equals(custId))
-                        .collect(Collectors.toList());
-            }
+            // Apply filters in a single stream operation
+            readings = readings.stream()
+                    .filter(reading -> {
+                        boolean matches = true;
 
-            if (start != null) {
-                readings = readings.stream()
-                        .filter(r -> !r.getDateOfReading().isBefore(start))
-                        .collect(Collectors.toList());
-            }
+                        if (custId != null) {
+                            matches = reading.getCustomer() != null &&
+                                    reading.getCustomer().getId().equals(custId);
+                        }
 
-            if (end != null) {
-                readings = readings.stream()
-                        .filter(r -> !r.getDateOfReading().isAfter(end))
-                        .collect(Collectors.toList());
-            }
+                        if (matches && start != null) {
+                            matches = !reading.getDateOfReading().isBefore(start);
+                        }
 
-            if (meterType != null) {
-                readings = readings.stream()
-                        .filter(r -> r.getKindOfMeter() == meterType)
-                        .collect(Collectors.toList());
-            }
+                        if (matches && end != null) {
+                            matches = !reading.getDateOfReading().isAfter(end);
+                        }
 
-            Map<String, Object> response = new HashMap<>();
+                        if (matches && meterType != null) {
+                            matches = reading.getKindOfMeter() == meterType;
+                        }
+
+                        return matches;
+                    })
+                    .collect(Collectors.toList());
+
+           /* Map<String, Object> response = new HashMap<>();
             response.put("readings", readings);
-            return Response.ok(response).build();
+            return Response.status(Response.Status.OK).entity(response.put("readings", readings)).build();*/
+            return Response.ok(readings).build();
 
         } catch (DateTimeParseException e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", "Invalid date format. Use yyyy-MM-dd");
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(error)
-                    .build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Error: Invalid date format. Use yyyy-MM-dd").build();
         } catch (IllegalArgumentException e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", "Invalid parameter format");
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(error)
-                    .build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Error: Invalid parameter format").build();
         } catch (Exception e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", e.getMessage());
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(error)
-                    .build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Error: " + e.getMessage()).build();
         }
     }
 
