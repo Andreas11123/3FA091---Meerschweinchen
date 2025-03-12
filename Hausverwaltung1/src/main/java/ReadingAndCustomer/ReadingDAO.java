@@ -49,20 +49,32 @@ public class ReadingDAO {
 
     // READ (get reading by meterId)
     public IReading getReadingById(UUID meterId) throws SQLException {
-        String query = "SELECT * FROM Reading WHERE id = ?";
+        String query = "SELECT r.*, ct.* \n" +
+                "                FROM Reading r \n" +
+                "                LEFT JOIN Customer ct ON r.customer_id = ct.id \n" +
+                "                WHERE r.id = ?";
         try (PreparedStatement pst = connection.prepareStatement(query)) {
             pst.setObject(1, meterId);
             ResultSet rs = pst.executeQuery();
+            System.out.println("Hallo");
             if (rs.next()) {
                 Reading reading = new Reading();
                 reading.setId(UUID.fromString(rs.getString("id")));
                 reading.setComment(rs.getString("comment"));
-                //reading.setCustomer(reading.getCustomer().getId());
                 reading.setDateOfReading(rs.getDate("date_of_reading").toLocalDate());
                 reading.setKindOfMeter(IReading.KindOfMeter.valueOf(rs.getString("kind_of_meter")));
                 reading.setMeterCount(rs.getDouble("meter_count"));
                 reading.setMeterId(rs.getString("meter_id"));
                 reading.setSubstitute(rs.getBoolean("substitute"));
+                Customer customer = new Customer();
+                customer.setFirstname(rs.getString("firstname"));
+                customer.setId(UUID.fromString(rs.getString("customer_id")));
+                customer.setLastname(rs.getString("lastname"));
+                customer.setBirthdate(LocalDate.parse(rs.getString("birthdate")));
+                customer.setGender(ICustomer.Gender.valueOf(rs.getString("gender")));
+                System.out.println(customer);
+                reading.setCustomer(customer);
+
 
                 return reading;
             }
@@ -128,6 +140,12 @@ public class ReadingDAO {
                 "    meter_id VARCHAR(32),\n" +
                 "    substitute BOOLEAN,\n" +
                 "    FOREIGN KEY (customer_id) REFERENCES Customer(id) ON DELETE SET NULL)";
+        Statement stmt = connection.createStatement();
+        stmt.execute(query);
+    }
+
+    public void dropReadingTable() throws SQLException {
+        String query = "DROP TABLE IF EXISTS reading";
         Statement stmt = connection.createStatement();
         stmt.execute(query);
     }

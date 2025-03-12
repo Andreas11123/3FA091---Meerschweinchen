@@ -108,4 +108,10 @@ public class CustomerDAO {
         Statement stmt = connection.createStatement();
         stmt.execute(query);
     }
+
+    public void dropCustomerTable() throws SQLException {
+        String query = "DROP TABLE IF EXISTS customer";
+        Statement stmt = connection.createStatement();
+        stmt.execute(query);
+    }
 }

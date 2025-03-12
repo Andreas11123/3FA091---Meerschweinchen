@@ -25,17 +25,22 @@ public class SetupResource {
     @DELETE
     public Response setupDatabase() {
         try {
+            // Delete tables first
+            readingDAO.dropReadingTable();
+            customerDAO.dropCustomerTable();
+
+            // Create tables again
             customerDAO.createCustomerTable();
             readingDAO.createReadingTable();
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "Database setup completed successfully");
-            return Response.ok(response).build();
+
+
+            //response.put("message", "Database setup completed successfully");
+            return Response.status(Response.Status.OK).build();
+
         } catch (Exception e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", "Error setting up database: " + e.getMessage());
-            return Response.serverError()
-                    .entity(error)
-                    .build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            //error.put("error", "Error setting up database: " + e.getMessage());
+
         }
     }
 }
