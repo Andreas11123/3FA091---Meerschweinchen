@@ -3,10 +3,10 @@ package dev.bsinfo.ressource;
 import DataConnection.Util;
 import ReadingAndCustomer.CustomerDAO;
 import ReadingAndCustomer.ReadingDAO;
-
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
+
 import java.sql.Connection;
 
 @Path("/setupDB")

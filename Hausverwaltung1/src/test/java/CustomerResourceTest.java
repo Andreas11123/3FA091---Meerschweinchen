@@ -1,13 +1,17 @@
 import DataConnection.Util;
-import ReadingAndCustomer.*;
+import ReadingAndCustomer.Customer;
+import ReadingAndCustomer.ICustomer;
 import dev.bsinfo.ressource.CustomerResource;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

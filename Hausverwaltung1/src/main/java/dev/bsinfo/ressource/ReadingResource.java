@@ -5,9 +5,9 @@ import ReadingAndCustomer.*;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,17 +27,8 @@ public class ReadingResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createReading(/*Map<String, Reading> requestMap*/ Reading reading) {
+    public Response createReading(Reading reading) {
         try {
-            /*if (requestMap == null || !requestMap.containsKey("reading")) {
-                Map<String, String> error = new HashMap<>();
-                error.put("error", "Invalid request format. Expected: {\"reading\": {...}}");
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity(error)
-                        .build();
-            }*/
-
-            //Reading reading = requestMap.get("reading");
             if (reading == null) {
                 Map<String, String> error = new HashMap<>();
                 error.put("error", "No reading data provided");
@@ -144,11 +135,17 @@ public class ReadingResource {
             @QueryParam("end") String endDate,
             @QueryParam("kindOfMeter") String kindOfMeter) {
         try {
+            // Parameter validieren und parsen
+            if ((startDate == null || startDate.trim().isEmpty()) &&
+                    (endDate == null || endDate.trim().isEmpty())) {
+                throw new DateTimeParseException("Beide Datumsfelder dürfen nicht leer sein", "", 0);
+            }
             // Parse parameters
-            final LocalDate start = startDate != null ? LocalDate.parse(startDate) : null;
-            final LocalDate end = endDate != null ? LocalDate.parse(endDate) : null;
-            final IReading.KindOfMeter meterType = kindOfMeter != null ?
-                    IReading.KindOfMeter.valueOf(kindOfMeter.toUpperCase()) : null;
+            final LocalDate start = startDate == null || startDate.trim().isEmpty() ? LocalDate.MIN :
+                    LocalDate.parse(startDate);
+            final LocalDate end = endDate == null || endDate.trim().isEmpty() ? LocalDate.now() : LocalDate.parse(endDate);
+            final IReading.KindOfMeter meterType = kindOfMeter != null && !kindOfMeter.isEmpty()
+                    ? IReading.KindOfMeter.valueOf(kindOfMeter.toUpperCase()) : null;
             final UUID custId = customerId != null ? UUID.fromString(customerId) : null;
 
             // Get base list of readings
@@ -180,9 +177,6 @@ public class ReadingResource {
                     })
                     .collect(Collectors.toList());
 
-           /* Map<String, Object> response = new HashMap<>();
-            response.put("readings", readings);
-            return Response.status(Response.Status.OK).entity(response.put("readings", readings)).build();*/
             return Response.ok(readings).build();
 
         } catch (DateTimeParseException e) {

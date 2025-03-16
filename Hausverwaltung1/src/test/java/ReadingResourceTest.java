@@ -1,11 +1,16 @@
 import DataConnection.Util;
-import ReadingAndCustomer.*;
+import ReadingAndCustomer.Customer;
+import ReadingAndCustomer.IReading;
+import ReadingAndCustomer.Reading;
 import dev.bsinfo.ressource.ReadingResource;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -91,6 +96,7 @@ public class ReadingResourceTest {
         Response response = readingResource.getReading(testReadingId.toString());
         assertEquals(200, response.getStatus());
     }
+
     @Test
     @Order(5)
     void testGetReadingByIdBadRequest() {
@@ -121,6 +127,7 @@ public class ReadingResourceTest {
 //        System.out.println("Response Code: " + response.getStatus());
 //        System.out.println("Response Body: " + response.getEntity());
     }
+
     @Test
     @Order(7)
     void testUpdateReadingBadRequest() {
@@ -148,6 +155,7 @@ public class ReadingResourceTest {
         Response response = readingResource.deleteReading(testReadingId.toString());
         assertEquals(200, response.getStatus());
     }
+
     @Test
     @Order(9)
     void testDeleteReadingBadRequest() {

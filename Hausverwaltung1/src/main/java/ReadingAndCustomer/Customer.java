@@ -13,16 +13,12 @@ public class Customer implements ICustomer {
     private UUID id;
 
     // Constructor
-    public Customer(String firstname, String lastname, LocalDate birthdate, /*UUID id,*/ Customer.Gender gender) {
+    public Customer(String firstname, String lastname, LocalDate birthdate, Customer.Gender gender) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.birthdate = birthdate;
         this.gender = gender;
-        //if (id == null)
-            this.id = UUID.randomUUID(); // Generate a random unique ID
-       // else {
-        //    this.id = id;
-        //}
+        this.id = UUID.randomUUID(); // Generate a random unique ID
     }
 
     // Default constructor

@@ -5,6 +5,7 @@ import ReadingAndCustomer.*;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,17 +25,8 @@ public class CustomerResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createCustomer(/*Map<String, Customer> requestMap*/Customer customer) {
+    public Response createCustomer(Customer customer) {
         try {
-           /* if (requestMap == null || !requestMap.containsKey("customer")) {
-                Map<String, String> error = new HashMap<>();
-                error.put("error", "Invalid request format. Expected: {\"customer\": {...}}");
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity(error)
-                        .build();
-            }*/
-
-            //Customer customer = requestMap.get("customer");
             if (customer == null) {
                 Map<String, String> error = new HashMap<>();
                 error.put("error", "No customer data provided");
@@ -112,15 +104,8 @@ public class CustomerResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response updateCustomer(/*Map<String, Customer> requestMap*/Customer customer) {
+    public Response updateCustomer(Customer customer) {
         try {
-            /*if (requestMap == null || !requestMap.containsKey("customer")) {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity("Invalid request format. Expected: {\"customer\": {...}}")
-                        .build();
-            }*/
-
-            //Customer customer = requestMap.get("customer");
             if (customer == null || customer.getId() == null) {
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity("Invalid customer data")

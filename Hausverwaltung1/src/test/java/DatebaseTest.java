@@ -1,7 +1,6 @@
 import ReadingAndCustomer.*;
 import org.junit.jupiter.api.*;
 
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;

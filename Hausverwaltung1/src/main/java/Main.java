@@ -1,9 +1,4 @@
 import DataConnection.DataConnection;
-import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.WebTarget;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 
 public class Main {
 
@@ -12,7 +7,5 @@ public class Main {
         System.out.println(System.getProperty("user.name"));
         DataConnection con = new DataConnection();
         con.getConnection();
-
-
     }
 }
