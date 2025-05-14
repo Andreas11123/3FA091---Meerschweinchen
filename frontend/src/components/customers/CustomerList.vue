@@ -22,14 +22,14 @@
           <table class="table table-hover">
             <thead>
               <tr>
-                <th @click="sortBy('firstName')">Vorname
-                  <i v-if="sortKey === 'firstName'" :class="sortOrder === 'asc' ? 'bi bi-arrow-up' : 'bi bi-arrow-down'"></i>
+                <th @click="sortBy('firstname')">Vorname
+                  <i v-if="sortKey === 'firstname'" :class="sortOrder === 'asc' ? 'bi bi-arrow-up' : 'bi bi-arrow-down'"></i>
                 </th>
-                <th @click="sortBy('lastName')">Nachname
-                  <i v-if="sortKey === 'lastName'" :class="sortOrder === 'asc' ? 'bi bi-arrow-up' : 'bi bi-arrow-down'"></i>
+                <th @click="sortBy('lastname')">Nachname
+                  <i v-if="sortKey === 'lastname'" :class="sortOrder === 'asc' ? 'bi bi-arrow-up' : 'bi bi-arrow-down'"></i>
                 </th>
-                <th @click="sortBy('birthDate')">Geburtsdatum
-                  <i v-if="sortKey === 'birthDate'" :class="sortOrder === 'asc' ? 'bi bi-arrow-up' : 'bi bi-arrow-down'"></i>
+                <th @click="sortBy('birthdate')">Geburtsdatum
+                  <i v-if="sortKey === 'birthdate'" :class="sortOrder === 'asc' ? 'bi bi-arrow-up' : 'bi bi-arrow-down'"></i>
                 </th>
                 <th @click="sortBy('gender')">Geschlecht
                   <i v-if="sortKey === 'gender'" :class="sortOrder === 'asc' ? 'bi bi-arrow-up' : 'bi bi-arrow-down'"></i>
@@ -49,9 +49,9 @@
                 <td colspan="5" class="text-center">Keine Kunden gefunden</td>
               </tr>
               <tr v-for="customer in filteredCustomers" :key="customer.id" @click="selectCustomer(customer)">
-                <td>{{ customer.firstName }}</td>
-                <td>{{ customer.lastName }}</td>
-                <td>{{ formatDate(customer.birthDate) }}</td>
+                <td>{{ customer.firstname }}</td>
+                <td>{{ customer.lastname }}</td>
+                <td>{{ formatDate(customer.birthdate) }}</td>
                 <td>{{ formatGender(customer.gender) }}</td>
                 <td>
                   <div class="btn-group">
@@ -79,12 +79,60 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <customer-form
-              :customer="currentCustomer"
-              :is-editing="isEditing"
-              @save="saveCustomer"
-              @cancel="hideCustomerModal"
-            />
+            <form @submit.prevent="saveCustomer">
+              <div class="mb-3">
+                <label for="firstname" class="form-label">Vorname</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="firstname"
+                  v-model.trim="currentCustomer.firstname"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="lastname" class="form-label">Nachname</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="lastname"
+                  v-model.trim="currentCustomer.lastname"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="birthdate" class="form-label">Geburtsdatum</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="birthdate"
+                  v-model="currentCustomer.birthdate"
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="gender" class="form-label">Geschlecht</label>
+                <select
+                  class="form-select"
+                  id="gender"
+                  v-model="currentCustomer.gender"
+                  required
+                >
+                  <option value="" disabled>Bitte wählen</option>
+                  <option value="M">Männlich</option>
+                  <option value="W">Weiblich</option>
+                  <option value="D">Divers</option>
+                  <option value="U">Unbekannt</option>
+                </select>
+              </div>
+
+              <div class="d-flex justify-content-end gap-2">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                <button type="submit" class="btn btn-primary">Speichern</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -99,7 +147,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>Möchten Sie den Kunden {{ currentCustomer.firstName }} {{ currentCustomer.lastName }} wirklich löschen?</p>
+            <p>Möchten Sie den Kunden {{ currentCustomer.firstname }} {{ currentCustomer.lastname }} wirklich löschen?</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
@@ -115,13 +163,10 @@
 import { ref, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { Modal } from 'bootstrap'
-import CustomerForm from './CustomerForm.vue'
+import { formatDateArray } from '@/utils/dateFormatter'
 
 export default {
   name: 'CustomerList',
-  components: {
-    CustomerForm
-  },
   setup() {
     // Store & Reactive Variablen
     const store = useStore()
@@ -130,7 +175,7 @@ export default {
     const isEditing = ref(false)
     const customerFormModal = ref(null)
     const deleteModal = ref(null)
-    const sortKey = ref('lastName')
+    const sortKey = ref('lastname')
     const sortOrder = ref('asc')
 
     // Computed Properties
@@ -144,8 +189,8 @@ export default {
       if (searchTerm.value) {
         const term = searchTerm.value.toLowerCase()
         result = result.filter(customer =>
-          customer.firstName.toLowerCase().includes(term) ||
-          customer.lastName.toLowerCase().includes(term)
+          customer.firstname.toLowerCase().includes(term) ||
+          customer.lastname.toLowerCase().includes(term)
         )
       }
 
@@ -159,9 +204,15 @@ export default {
         if (valueB === null) valueB = ''
 
         // Konvertiere Daten für Vergleich
-        if (sortKey.value === 'birthDate' && valueA && valueB) {
-          valueA = new Date(valueA)
-          valueB = new Date(valueB)
+        if (sortKey.value === 'birthdate' && valueA && valueB) {
+          // Falls Geburtsdatum als Array
+          if (Array.isArray(valueA) && Array.isArray(valueB)) {
+            valueA = new Date(valueA[0], valueA[1]-1, valueA[2])
+            valueB = new Date(valueB[0], valueB[1]-1, valueB[2])
+          } else {
+            valueA = new Date(valueA)
+            valueB = new Date(valueB)
+          }
         } else if (typeof valueA === 'string') {
           valueA = valueA.toLowerCase()
           valueB = valueB.toLowerCase()
@@ -187,9 +238,9 @@ export default {
 
     const showAddCustomerModal = () => {
       currentCustomer.value = {
-        firstName: '',
-        lastName: '',
-        birthDate: null,
+        firstname: '',
+        lastname: '',
+        birthdate: null,
         gender: ''
       }
       isEditing.value = false
@@ -200,6 +251,13 @@ export default {
 
     const showEditCustomerModal = (customer) => {
       currentCustomer.value = { ...customer }
+
+      // Konvertiere Geburtsdatum-Array in ISO-String für Date-Input
+      if (Array.isArray(currentCustomer.value.birthdate)) {
+        const [year, month, day] = currentCustomer.value.birthdate
+        currentCustomer.value.birthdate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+      }
+
       isEditing.value = true
 
       const modal = new Modal(customerFormModal.value)
@@ -213,21 +271,21 @@ export default {
       modal.show()
     }
 
-    const hideCustomerModal = () => {
-      const modal = Modal.getInstance(customerFormModal.value)
-      if (modal) modal.hide()
-    }
-
-    const saveCustomer = async (customerData) => {
+    const saveCustomer = async () => {
       try {
+        // Wenn Geburtsdatum als ISO-String vorliegt, behalten wir es so
+        // Backend konvertiert es später in ein Array
+
         if (isEditing.value) {
-          await store.dispatch('customers/updateCustomer', customerData)
+          await store.dispatch('customers/updateCustomer', currentCustomer.value)
           alert('Kunde wurde erfolgreich aktualisiert!')
         } else {
-          await store.dispatch('customers/createCustomer', customerData)
+          await store.dispatch('customers/createCustomer', currentCustomer.value)
           alert('Kunde wurde erfolgreich erstellt!')
         }
-        hideCustomerModal()
+
+        const modal = Modal.getInstance(customerFormModal.value)
+        if (modal) modal.hide()
       } catch (error) {
         console.error('Fehler beim Speichern des Kunden:', error)
         alert('Kunde konnte nicht gespeichert werden.')
@@ -265,9 +323,20 @@ export default {
       }
     }
 
-    const formatDate = (dateString) => {
-      if (!dateString) return ''
-      const date = new Date(dateString)
+    const formatDate = (date) => {
+      if (!date) return ''
+
+      // Falls das Datum ein Array ist [Jahr, Monat, Tag]
+      if (Array.isArray(date)) {
+        return formatDateArray(date)
+      }
+
+      // Falls das Datum ein String ist
+      if (typeof date === 'string') {
+        return new Date(date).toLocaleDateString('de-DE')
+      }
+
+      // Falls es bereits ein Date-Objekt ist
       return date.toLocaleDateString('de-DE')
     }
 
@@ -301,7 +370,6 @@ export default {
       showAddCustomerModal,
       showEditCustomerModal,
       showDeleteCustomerModal,
-      hideCustomerModal,
       saveCustomer,
       deleteCustomer,
       selectCustomer,

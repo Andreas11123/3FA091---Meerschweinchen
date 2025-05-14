@@ -1,69 +1,48 @@
+// src/services/customerService.js
 import apiClient from './api'
 
 export default {
-  /**
-   * Holt alle Kunden
-   */
+  // Hole alle Kunden
   getCustomers() {
     return apiClient.get('/customers')
   },
 
-  /**
-   * Holt einen Kunden nach ID
-   * @param {string} id - Kunden-ID (UUID)
-   */
+  // Hole einen Kunden anhand der ID
   getCustomerById(id) {
     return apiClient.get(`/customers/${id}`)
   },
 
-  /**
-   * Erstellt einen neuen Kunden
-   * @param {Object} customer - Kundendaten
-   */
+  // Erstelle einen neuen Kunden
   createCustomer(customer) {
-    // Gemäß der JSON-Schema-Vorgabe aus deinem Projekt
+    // Direktes Customer-Objekt senden, NICHT im customer-Schlüssel verpacken
     const requestData = {
-      customer: {
-        firstName: customer.firstName,
-        lastName: customer.lastName,
-        birthDate: customer.birthDate,
-        gender: customer.gender
-      }
+      firstname: customer.firstName || customer.firstname,
+      lastname: customer.lastName || customer.lastname,
+      birthdate: customer.birthDate || customer.birthdate,
+      gender: customer.gender,
+      id: customer.id
     }
 
-    // ID hinzufügen, falls vorhanden
-    if (customer.id) {
-      requestData.customer.id = customer.id
-    }
-
+    console.log('Sending customer data:', requestData);
     return apiClient.post('/customers', requestData)
   },
 
-  /**
-   * Aktualisiert einen Kunden
-   * @param {Object} customer - Aktualisierte Kundendaten mit ID
-   */
+  // Aktualisiere einen Kunden
   updateCustomer(customer) {
-    // Gemäß der JSON-Schema-Vorgabe für PUT /customers
+    // Direktes Customer-Objekt senden
     const requestData = {
-      customers: [
-        {
-          id: customer.id,
-          firstName: customer.firstName,
-          lastName: customer.lastName,
-          birthDate: customer.birthDate,
-          gender: customer.gender
-        }
-      ]
+      id: customer.id,
+      firstname: customer.firstName || customer.firstname,
+      lastname: customer.lastName || customer.lastname,
+      birthdate: customer.birthDate || customer.birthdate,
+      gender: customer.gender
     }
 
+    console.log('Updating customer:', requestData);
     return apiClient.put('/customers', requestData)
   },
 
-  /**
-   * Löscht einen Kunden
-   * @param {string} id - Kunden-ID (UUID)
-   */
+  // Lösche einen Kunden
   deleteCustomer(id) {
     return apiClient.delete(`/customers/${id}`)
   }

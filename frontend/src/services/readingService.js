@@ -1,13 +1,8 @@
+// src/services/readingService.js
 import apiClient from './api'
 
 export default {
-  /**
-   * Holt Ablesungen mit optionalen Filtern
-   * @param {string} customerId - Optional: Kunden-ID (UUID)
-   * @param {string} startDate - Optional: Startdatum (YYYY-MM-DD)
-   * @param {string} endDate - Optional: Enddatum (YYYY-MM-DD)
-   * @param {string} kindOfMeter - Optional: Zählerart (HEIZUNG, STROM, WASSER, UNBEKANNT)
-   */
+  // Hole alle Ablesungen mit optionalen Filtern
   getReadings(customerId, startDate, endDate, kindOfMeter) {
     const params = {}
 
@@ -19,86 +14,72 @@ export default {
     return apiClient.get('/readings', { params })
   },
 
-  /**
-   * Holt eine Ablesung nach ID
-   * @param {string} id - Ablesungs-ID (UUID)
-   */
+  // Hole eine Ablesung anhand der ID
   getReadingById(id) {
     return apiClient.get(`/readings/${id}`)
   },
 
-  /**
-   * Erstellt eine neue Ablesung
-   * @param {Object} reading - Ablesungsdaten
-   */
+  // Erstelle eine neue Ablesung
   createReading(reading) {
-    // Gemäß der JSON-Schema-Vorgabe aus deinem Projekt
+    // Direktes Reading-Objekt erstellen (ohne "reading" wrapper)
     const requestData = {
-      reading: {
-        dateOfReading: reading.dateOfReading,
-        meterId: reading.meterId,
-        substitute: reading.substitute || false,
-        meterCount: reading.meterCount,
-        kindOfMeter: reading.kindOfMeter,
-        comment: reading.comment || null
-      }
+      dateOfReading: reading.dateOfReading,
+      meterId: reading.meterId,
+      substitute: reading.substitute || false,
+      meterCount: reading.meterCount,
+      kindOfMeter: reading.kindOfMeter,
+      comment: reading.comment || null
     }
 
     // Kunden-Daten hinzufügen, falls vorhanden
     if (reading.customer) {
-      requestData.reading.customer = {
+      requestData.customer = {
         id: reading.customer.id,
-        firstName: reading.customer.firstName,
-        lastName: reading.customer.lastName,
-        birthDate: reading.customer.birthDate,
+        firstname: reading.customer.firstName || reading.customer.firstname,
+        lastname: reading.customer.lastName || reading.customer.lastname,
+        birthdate: reading.customer.birthDate || reading.customer.birthdate,
         gender: reading.customer.gender
       }
     }
 
     // ID hinzufügen, falls vorhanden
     if (reading.id) {
-      requestData.reading.id = reading.id
+      requestData.id = reading.id
     }
 
+    console.log('Sending reading data:', JSON.stringify(requestData, null, 2));
     return apiClient.post('/readings', requestData)
   },
 
-  /**
-   * Aktualisiert eine Ablesung
-   * @param {Object} reading - Aktualisierte Ablesungsdaten mit ID
-   */
+  // Aktualisiere eine Ablesung
   updateReading(reading) {
-    // Gemäß der JSON-Schema-Vorgabe
+    // Direktes Reading-Objekt erstellen (ohne "reading" wrapper)
     const requestData = {
-      reading: {
-        id: reading.id,
-        dateOfReading: reading.dateOfReading,
-        meterId: reading.meterId,
-        substitute: reading.substitute || false,
-        meterCount: reading.meterCount,
-        kindOfMeter: reading.kindOfMeter,
-        comment: reading.comment || null
-      }
+      id: reading.id,
+      dateOfReading: reading.dateOfReading,
+      meterId: reading.meterId,
+      substitute: reading.substitute || false,
+      meterCount: reading.meterCount,
+      kindOfMeter: reading.kindOfMeter,
+      comment: reading.comment || null
     }
 
     // Kunden-Daten hinzufügen, falls vorhanden
     if (reading.customer) {
-      requestData.reading.customer = {
+      requestData.customer = {
         id: reading.customer.id,
-        firstName: reading.customer.firstName,
-        lastName: reading.customer.lastName,
-        birthDate: reading.customer.birthDate,
+        firstname: reading.customer.firstName || reading.customer.firstname,
+        lastname: reading.customer.lastName || reading.customer.lastname,
+        birthdate: reading.customer.birthDate || reading.customer.birthdate,
         gender: reading.customer.gender
       }
     }
 
+    console.log('Updating reading:', JSON.stringify(requestData, null, 2));
     return apiClient.put('/readings', requestData)
   },
 
-  /**
-   * Löscht eine Ablesung
-   * @param {string} id - Ablesungs-ID (UUID)
-   */
+  // Lösche eine Ablesung
   deleteReading(id) {
     return apiClient.delete(`/readings/${id}`)
   }

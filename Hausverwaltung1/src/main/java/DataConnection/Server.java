@@ -31,7 +31,8 @@ public class Server {
                     // Explizit die REST-Ressourcen registrieren
                     .register(dev.bsinfo.ressource.CustomerResource.class)
                     .register(dev.bsinfo.ressource.ReadingResource.class)
-                    .register(dev.bsinfo.ressource.SetupResource.class);
+                    .register(dev.bsinfo.ressource.SetupResource.class)
+                    .register(dev.bsinfo.ressource.CORSFilter.class);
 
             // Debug-Ausgabe der registrierten Ressourcen
             System.out.println("Registrierte Ressourcen:");

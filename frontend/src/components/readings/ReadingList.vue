@@ -16,7 +16,7 @@
             <select class="form-select" id="customerFilter" v-model="filters.customerId" @change="applyFilters">
               <option :value="null">Alle Kunden</option>
               <option v-for="customer in customers" :key="customer.id" :value="customer.id">
-                {{ customer.firstName }} {{ customer.lastName }}
+                {{ customer.firstname }} {{ customer.lastname }}
               </option>
             </select>
           </div>
@@ -121,13 +121,97 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <reading-form
-              :reading="currentReading"
-              :customers="customers"
-              :is-editing="isEditing"
-              @save="saveReading"
-              @cancel="hideReadingModal"
-            />
+            <form @submit.prevent="saveReading">
+              <div class="mb-3">
+                <label for="customer" class="form-label">Kunde</label>
+                <select
+                  class="form-select"
+                  id="customer"
+                  v-model="currentReading.customer"
+                  required
+                >
+                  <option value="" disabled>Bitte wählen</option>
+                  <option v-for="customer in customers" :key="customer.id" :value="customer">
+                    {{ customer.firstname }} {{ customer.lastname }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="dateOfReading" class="form-label">Ablesedatum</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="dateOfReading"
+                  v-model="currentReading.dateOfReading"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="kindOfMeter" class="form-label">Zählerart</label>
+                <select
+                  class="form-select"
+                  id="kindOfMeter"
+                  v-model="currentReading.kindOfMeter"
+                  required
+                >
+                  <option value="" disabled>Bitte wählen</option>
+                  <option value="HEIZUNG">Heizung</option>
+                  <option value="STROM">Strom</option>
+                  <option value="WASSER">Wasser</option>
+                  <option value="UNBEKANNT">Unbekannt</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="meterId" class="form-label">Zähler-ID</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="meterId"
+                  v-model.trim="currentReading.meterId"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="meterCount" class="form-label">Zählerstand</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  class="form-control"
+                  id="meterCount"
+                  v-model.number="currentReading.meterCount"
+                  required
+                />
+              </div>
+
+              <div class="mb-3 form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="substitute"
+                  v-model="currentReading.substitute"
+                />
+                <label class="form-check-label" for="substitute">Ersatzwert</label>
+              </div>
+
+              <div class="mb-3">
+                <label for="comment" class="form-label">Kommentar</label>
+                <textarea
+                  class="form-control"
+                  id="comment"
+                  v-model.trim="currentReading.comment"
+                  rows="3"
+                ></textarea>
+              </div>
+
+              <div class="d-flex justify-content-end gap-2">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                <button type="submit" class="btn btn-primary">Speichern</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -163,13 +247,10 @@
 import { ref, computed, onMounted, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { Modal } from 'bootstrap'
-import ReadingForm from './ReadingForm.vue'
+import { formatDateArray, formatDateForDisplay } from '@/utils/dateFormatter'
 
 export default {
   name: 'ReadingList',
-  components: {
-    ReadingForm
-  },
   setup() {
     // Store & Reactive Variablen
     const store = useStore()
@@ -202,8 +283,8 @@ export default {
 
         // Spezielle Behandlung für customer
         if (sortKey.value === 'customer') {
-          valueA = a.customer ? `${a.customer.lastName} ${a.customer.firstName}` : ''
-          valueB = b.customer ? `${b.customer.lastName} ${b.customer.firstName}` : ''
+          valueA = a.customer ? `${a.customer.lastname} ${a.customer.firstname}` : ''
+          valueB = b.customer ? `${b.customer.lastname} ${b.customer.firstname}` : ''
         } else {
           valueA = a[sortKey.value]
           valueB = b[sortKey.value]
@@ -215,8 +296,14 @@ export default {
 
         // Konvertiere Daten für Vergleich
         if (sortKey.value === 'dateOfReading' && valueA && valueB) {
-          valueA = new Date(valueA)
-          valueB = new Date(valueB)
+          if (Array.isArray(valueA) && Array.isArray(valueB)) {
+            // Geburtsdatum als Array [Jahr, Monat, Tag]
+            valueA = new Date(valueA[0], valueA[1]-1, valueA[2])
+            valueB = new Date(valueB[0], valueB[1]-1, valueB[2])
+          } else {
+            valueA = new Date(valueA)
+            valueB = new Date(valueB)
+          }
         } else if (typeof valueA === 'string') {
           valueA = valueA.toLowerCase()
           valueB = valueB.toLowerCase()
@@ -264,10 +351,10 @@ export default {
     const showEditReadingModal = (reading) => {
       currentReading.value = { ...reading }
 
-      // Datum formatieren für HTML-Input
-      if (currentReading.value.dateOfReading) {
-        const date = new Date(currentReading.value.dateOfReading)
-        currentReading.value.dateOfReading = date.toISOString().split('T')[0]
+      // Konvertiere Datum-Array in ISO-String für Datums-Input
+      if (Array.isArray(currentReading.value.dateOfReading)) {
+        const [year, month, day] = currentReading.value.dateOfReading
+        currentReading.value.dateOfReading = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
       }
 
       isEditing.value = true
@@ -283,21 +370,21 @@ export default {
       modal.show()
     }
 
-    const hideReadingModal = () => {
-      const modal = Modal.getInstance(readingFormModal.value)
-      if (modal) modal.hide()
-    }
-
-    const saveReading = async (readingData) => {
+    const saveReading = async () => {
       try {
+        // Hier würde man normalerweise das Datum in ein Array umwandeln,
+        // aber dafür sorgt der readingService
+
         if (isEditing.value) {
-          await store.dispatch('readings/updateReading', readingData)
+          await store.dispatch('readings/updateReading', currentReading.value)
           alert('Ablesung wurde erfolgreich aktualisiert!')
         } else {
-          await store.dispatch('readings/createReading', readingData)
+          await store.dispatch('readings/createReading', currentReading.value)
           alert('Ablesung wurde erfolgreich erstellt!')
         }
-        hideReadingModal()
+
+        const modal = Modal.getInstance(readingFormModal.value)
+        if (modal) modal.hide()
       } catch (error) {
         console.error('Fehler beim Speichern der Ablesung:', error)
         alert('Ablesung konnte nicht gespeichert werden.')
@@ -327,15 +414,13 @@ export default {
       }
     }
 
-    const formatDate = (dateString) => {
-      if (!dateString) return ''
-      const date = new Date(dateString)
-      return date.toLocaleDateString('de-DE')
+    const formatDate = (date) => {
+      return formatDateForDisplay(date);
     }
 
     const formatCustomer = (customer) => {
       if (!customer) return '—'
-      return `${customer.firstName} ${customer.lastName}`
+      return `${customer.firstname} ${customer.lastname}`
     }
 
     const formatMeterType = (meterType) => {
@@ -405,7 +490,6 @@ export default {
       showAddReadingModal,
       showEditReadingModal,
       showDeleteReadingModal,
-      hideReadingModal,
       saveReading,
       deleteReading,
       sortBy,

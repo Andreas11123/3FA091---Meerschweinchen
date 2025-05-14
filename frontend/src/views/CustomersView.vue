@@ -1,12 +1,18 @@
 <template>
-  <div class="customers">
-    <h1>Kundenverwaltung</h1>
-    <p>Hier werden Kunden verwaltet.</p>
+  <div class="customers-view">
+    <h1 class="mb-4">Kundenverwaltung</h1>
+
+    <customer-list />
   </div>
 </template>
 
 <script>
+import CustomerList from '@/components/customers/CustomerList.vue'
+
 export default {
-  name: 'CustomersView'
+  name: 'CustomersView',
+  components: {
+    CustomerList
+  }
 }
 </script>

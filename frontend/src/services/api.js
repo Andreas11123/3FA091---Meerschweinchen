@@ -1,40 +1,50 @@
+// src/services/api.js
 import axios from 'axios'
 
-// Konfiguriere die Basis-URL für Axios mit Umgebungsvariable
-const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:8080/test/resources'
-
-// Erstelle eine Axios-Instanz mit der Basis-URL
+// Basis-URL für die API-Anfragen
 const apiClient = axios.create({
-  baseURL: baseURL,
+  baseURL: 'http://localhost:8080/test/resources',
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
   },
-  timeout: 10000 // 10 Sekunden Timeout
+  timeout: 10000
 })
 
-// Anfrage-Interceptor
-apiClient.interceptors.request.use(
-  config => {
-    // Hier könnte später Authentifizierung hinzugefügt werden
-    return config
-  },
-  error => {
-    return Promise.reject(error)
-  }
-)
+// Add request interceptor for debugging
+apiClient.interceptors.request.use(request => {
+  console.log('Request:', {
+    method: request.method,
+    url: request.url,
+    baseURL: request.baseURL,
+    headers: request.headers,
+    params: request.params,
+    data: request.data
+  });
+  return request;
+}, error => {
+  console.error('Request error:', error);
+  return Promise.reject(error);
+});
 
-// Antwort-Interceptor
-apiClient.interceptors.response.use(
-  response => {
-    return response
-  },
-  error => {
-    // Fehlerbehandlung
-    const errorMessage = error.response?.data?.error || 'Ein Fehler ist aufgetreten'
-    console.error('API-Fehler:', errorMessage)
-    return Promise.reject(error)
-  }
-)
+// Add response interceptor for debugging
+apiClient.interceptors.response.use(response => {
+  console.log('Response:', {
+    status: response.status,
+    headers: response.headers,
+    data: response.data
+  });
+  return response;
+}, error => {
+  console.error('Response error:', {
+    message: error.message,
+    status: error.response?.status,
+    statusText: error.response?.statusText,
+    headers: error.response?.headers,
+    data: error.response?.data,
+    config: error.config
+  });
+  return Promise.reject(error);
+});
 
 export default apiClient
