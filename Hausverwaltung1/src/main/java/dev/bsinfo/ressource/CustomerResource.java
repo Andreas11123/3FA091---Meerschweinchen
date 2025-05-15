@@ -33,6 +33,7 @@ public class CustomerResource {
                 .build();
     }
 
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -112,6 +113,7 @@ public class CustomerResource {
             ICustomer customer = customerDAO.getCustomerById(UUID.fromString(uuid));
             if (customer == null) {
                 System.out.println("Customer not found: " + uuid);
+
                 Map<String, String> error = new HashMap<>();
                 error.put("error", "Customer not found");
                 return Response.status(Response.Status.NOT_FOUND)
@@ -164,6 +166,7 @@ public class CustomerResource {
             System.out.println("Last Name: " + customer.getLastname());
             System.out.println("Birth Date: " + customer.getBirthdate());
             System.out.println("Gender: " + customer.getGender());
+
 
             ICustomer existingCustomer = customerDAO.getCustomerById(customer.getId());
             if (existingCustomer == null) {
