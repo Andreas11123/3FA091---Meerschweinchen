@@ -65,6 +65,7 @@ public class Server {
             System.out.println("Kein laufender Server, der gestoppt werden kann.");
             return;
 
+
         }
         server.stop(0);
         server = null;
