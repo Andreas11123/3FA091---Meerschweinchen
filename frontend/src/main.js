@@ -13,6 +13,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 // import 'primevue/resources/primevue.css'
 // import 'primeicons/primeicons.css'
 
+
 // App erstellen und mit Plugins erweitern
 const app = createApp(App)
 app.use(router)

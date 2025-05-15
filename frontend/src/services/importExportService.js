@@ -433,6 +433,7 @@ export default {
           comment: reading.comment || null
         }
 
+
         // Normalisiere die Kundendaten, falls vorhanden
         if (reading.customer) {
           result.customer = {

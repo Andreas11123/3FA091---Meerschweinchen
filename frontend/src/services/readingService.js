@@ -75,6 +75,7 @@ export default {
       }
     }
 
+
     console.log('Updating reading:', JSON.stringify(requestData, null, 2));
     return apiClient.put('/readings', requestData)
   },

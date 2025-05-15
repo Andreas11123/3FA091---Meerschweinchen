@@ -2,6 +2,7 @@
 import axios from 'axios'
 
 // Basis-URL für die API-Anfragen
+
 const apiClient = axios.create({
   baseURL: 'http://localhost:8080/test/resources',
   headers: {

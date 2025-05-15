@@ -42,6 +42,7 @@ export default {
     return apiClient.put('/customers', requestData)
   },
 
+
   // Lösche einen Kunden
   deleteCustomer(id) {
     return apiClient.delete(`/customers/${id}`)
