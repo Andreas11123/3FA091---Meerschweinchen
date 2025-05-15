@@ -53,7 +53,6 @@ import { useStore } from 'vuex'
 import Navbar from '@/components/common/Navbar.vue'
 import Sidebar from '@/components/common/Sidebar.vue'
 import Footer from '@/components/common/Footer.vue'
-import MobileSidebar from '@/components/common/MobileSidebar.vue' // Eine neue Komponente für mobile Geräte
 
 export default {
   name: 'App',
@@ -61,7 +60,6 @@ export default {
     Navbar,
     Sidebar,
     Footer,
-    MobileSidebar
   },
   setup() {
     const store = useStore()
