@@ -10,7 +10,7 @@
 import CustomerList from '@/components/customers/CustomerList.vue'
 
 export default {
-  name: 'CustomersView',
+  name: 'CustomersView', 
   components: {
     CustomerList
   }
