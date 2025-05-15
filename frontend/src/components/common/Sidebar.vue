@@ -12,7 +12,7 @@
           <router-link class="nav-link" to="/customers" active-class="active">
             <i class="bi bi-people me-2"></i>
             Kunden
-          </router-link>
+          </router-link> 
         </li>
         <li class="nav-item">
           <router-link class="nav-link" to="/readings" active-class="active">
