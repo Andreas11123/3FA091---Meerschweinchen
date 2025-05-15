@@ -10,6 +10,7 @@ export function formatDateArray(dateArray) {
   return `${day}.${month}.${year}`;
 }
 
+
 /**
  * Formatiert ein Datum für die Anzeige (ISO-String oder Array)
  */
