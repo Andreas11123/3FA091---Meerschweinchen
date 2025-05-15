@@ -4,7 +4,6 @@
       <div class="card-header">
         <h5 class="card-title mb-0">Daten exportieren</h5>
       </div>
-
       <div class="card-body">
         <form @submit.prevent="exportData">
           <div class="mb-3">
@@ -14,7 +13,6 @@
               <option value="readings">Ablesungen</option>
             </select>
           </div>
-
           <div class="mb-3">
             <label for="exportFileFormat" class="form-label">Dateiformat</label>
             <select id="exportFileFormat" class="form-select" v-model="fileFormat" required>
@@ -23,12 +21,10 @@
               <option value="csv">CSV</option>
             </select>
           </div>
-
           <div v-if="dataType === 'readings'" class="mb-3">
             <div class="card bg-light">
               <div class="card-body">
                 <h6 class="card-subtitle mb-2 text-muted">Filter für Ablesungen</h6>
-
                 <div class="mb-3">
                   <label for="exportCustomer" class="form-label">Kunde</label>
                   <select id="exportCustomer" class="form-select" v-model="filters.customerId">
@@ -200,6 +196,7 @@ export default {
 </script>
 
 <style scoped>
+
 .data-export {
   max-width: 800px;
   margin: 0 auto;
