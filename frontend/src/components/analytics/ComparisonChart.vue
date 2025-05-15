@@ -16,6 +16,7 @@
             </select>
           </div>
 
+
           <div class="col-md-4">
             <label for="comparisonYear1" class="form-label">Jahr 1</label>
             <select id="comparisonYear1" class="form-select" v-model="selectedYear1">
