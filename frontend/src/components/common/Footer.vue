@@ -20,7 +20,8 @@ export default {
 </script>
 
 <style scoped>
-.footer {
-  border-top: 1px solid #e5e5e5;
+.footer
+{
+border-top: 1px solid #e5e5e5;
 }
 </style>
