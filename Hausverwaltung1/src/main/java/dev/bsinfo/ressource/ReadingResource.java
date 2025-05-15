@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+
+
 @Path("/readings")
 public class ReadingResource {
     private final ReadingDAO readingDAO;
@@ -37,6 +39,7 @@ public class ReadingResource {
                 .build();
     }
 
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -53,7 +56,6 @@ public class ReadingResource {
                         .entity(error)
                         .build();
             }
-
             // Log all important fields for debugging
             System.out.println("Reading ID: " + reading.getId());
             System.out.println("Customer: " + (reading.getCustomer() != null ? reading.getCustomer().getId() : "null"));
@@ -62,6 +64,7 @@ public class ReadingResource {
             System.out.println("Meter Count: " + reading.getMeterCount());
             System.out.println("Meter ID: " + reading.getMeterId());
             System.out.println("Substitute: " + reading.getSubstitute());
+
 
             if (reading.getId() == null) {
                 reading.setId(UUID.randomUUID());
@@ -110,8 +113,10 @@ public class ReadingResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateReading(Reading reading) {
         try {
+
             // Debug-Ausgabe
             System.out.println("Received reading object for update: " + (reading != null ? reading.toString() : "null"));
+
 
             if (reading == null || reading.getId() == null) {
                 System.out.println("Invalid reading data for update");
@@ -130,6 +135,7 @@ public class ReadingResource {
             System.out.println("Meter Count: " + reading.getMeterCount());
             System.out.println("Meter ID: " + reading.getMeterId());
             System.out.println("Substitute: " + reading.getSubstitute());
+
 
             IReading existingReading = readingDAO.getReadingById(reading.getId());
             if (existingReading == null) {
