@@ -1,4 +1,7 @@
 <template>
+  <div class="home">
+    <h1>Willkommen bei der Hausverwaltung</h1>
+    <p>Wählen Sie eine Option aus dem Menü.</p>
   <div class="home-view">
     <div class="jumbotron bg-light p-5 rounded">
       <h1 class="display-4">Willkommen bei der Hausverwaltung</h1>
@@ -132,9 +135,11 @@ export default {
   name: 'HomeView'
 }
 </script>
+</script>
 
 <style scoped>
 .card-title i {
   font-size: 1.25rem;
 }
+
 </style>
