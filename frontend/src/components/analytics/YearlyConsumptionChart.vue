@@ -293,5 +293,16 @@ export default {
 .chart-container {
   height: 400px;
   width: 100%;
+  max-width: 100%;
+}
+
+.card {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.row {
+  margin-right: 0;
+  margin-left: 0;
 }
 </style>

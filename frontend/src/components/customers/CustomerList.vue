@@ -389,4 +389,12 @@ export default {
 .table tbody tr {
   cursor: pointer;
 }
+.table-responsive {
+  overflow-x: auto;
+  width: 100%;
+}
+.card {
+  max-width: 100%;
+  overflow: hidden;
+}
 </style>
