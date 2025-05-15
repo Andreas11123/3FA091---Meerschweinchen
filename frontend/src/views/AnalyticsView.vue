@@ -1,4 +1,7 @@
 <template>
+  <div class="analytics">
+    <h1>Datenauswertung</h1>
+    <p>Hier werden Daten ausgewertet.</p>
   <div class="analytics-view">
     <h1 class="mb-4">Datenauswertung</h1>
 
@@ -17,10 +20,12 @@ import YearlyConsumptionChart from '@/components/analytics/YearlyConsumptionChar
 import ComparisonChart from '@/components/analytics/ComparisonChart.vue'
 
 export default {
+  name: 'AnalyticsView'
   name: 'AnalyticsView',
   components: {
     YearlyConsumptionChart,
     ComparisonChart
   }
 }
+
 </script>
